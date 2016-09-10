@@ -7,26 +7,24 @@
 
 
 
-MainGame::MainGame()
-{
-	_window = nullptr;
-	_screenWidth = 1024;
-	_screenHeight = 768;
-	_gameState = GameState::PLAY;
-}
+MainGame::MainGame() :
+	_screenWidth(1024), 
+	_screenHeight(768),
+	_time(0.0f),
+	_window(nullptr),
+	_gameState(GameState::PLAY) 
+{}
 
-MainGame::~MainGame()
-{
-}
+MainGame::~MainGame() {}
 
 
 
-//Public:
+//Public methods
 
 void MainGame::run() {
 	_initSystems();
 
-	_sprite.init(-0.5f, -0.5f, 1.0f, 1.0f);
+	_sprite.init(-1.0f, -1.0f, 2.0f, 2.0f);
 
 
 
@@ -36,7 +34,7 @@ void MainGame::run() {
 
 
 
-//Private:
+//Private methods
 void MainGame::_initSystems() {
 	//Initialize SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -69,18 +67,18 @@ SDL_WINDOWPOS_CENTERED, _screenWidth, _screenHeight, SDL_WINDOW_OPENGL);
 void MainGame::_initShaders() {
 	_colorProgram.compileShaders("Shaders/colorShading.vert", "Shaders/colorShading.frag");
 	_colorProgram.addAttribute("vertexPosition");
+	_colorProgram.addAttribute("vertexColor");
 	_colorProgram.linkShaders();
 }
-
 
 void MainGame::_gameloop() {
 	while (_gameState != GameState::EXIT) {
 		_processInput();
-		_drawGame();
+		_time += 0.01;
 
+		_drawGame();
 	}
 }
-
 
 void MainGame::_processInput() {
 	SDL_Event evnt;
@@ -99,18 +97,14 @@ void MainGame::_processInput() {
 }
 
 void MainGame::_drawGame() {
+
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//glEnableClientState(GL_COLOR_ARRAY);
-	//glBegin(GL_TRIANGLES);
-	//glColor3f(1.0f, 0.0f, 0.0f);
-	//glVertex2f(0, 0);
-	//glVertex2f(0, 500);
-	//glVertex2f(500, 500);
-	//glEnd();
-
 	_colorProgram.use();
+
+	GLuint timeLocation = _colorProgram.getUniformLocation("time");
+	glUniform1f(timeLocation, _time);
 
 	_sprite.draw();
 

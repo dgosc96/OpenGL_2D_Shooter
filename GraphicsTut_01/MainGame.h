@@ -5,7 +5,7 @@
 #include "Sprite.h"
 #include "GLSLProgram.h"
 
-enum class GameState {PLAY, EXIT };
+enum class GameState {PLAY, EXIT};
 
 class MainGame
 {
@@ -35,5 +35,7 @@ private:
 	Sprite _sprite;
 
 	GLSLProgram _colorProgram;
+
+	float _time;
 };
 
