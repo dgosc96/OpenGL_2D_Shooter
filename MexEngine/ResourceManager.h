@@ -2,12 +2,15 @@
 #include <string>
 
 #include "TextureCache.h"
-class ResourceManager
+
+namespace MexEngine
 {
-public:
-	static GLTexture getTexture(std::string texturePath);
+	class ResourceManager
+	{
+	public:
+		static GLTexture getTexture(std::string texturePath);
 
-private:
-	static TextureCache _textureCache;
-};
-
+	private:
+		static TextureCache _textureCache;
+	};
+}

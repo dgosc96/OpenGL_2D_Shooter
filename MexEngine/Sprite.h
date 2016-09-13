@@ -5,23 +5,25 @@
 
 #include "GLTexture.h"
 
-
-class Sprite
+namespace MexEngine
 {
-public:
-	Sprite();
-	~Sprite();
+	class Sprite
+	{
+	public:
+		Sprite();
+		~Sprite();
 
-	void init(float x, float y, float width, float height, std::string textrePath);
+		void init(float x, float y, float width, float height, std::string textrePath);
 
-	void draw();
-private:
-	float _x;
-	float _y;
-	float _width;
-	float _height;
-	GLuint _vboID;
-	GLTexture _texture;
+		void draw();
+	private:
+		float _x;
+		float _y;
+		float _width;
+		float _height;
+		GLuint _vboID;
+		GLTexture _texture;
 
-};
+	};
 
+}

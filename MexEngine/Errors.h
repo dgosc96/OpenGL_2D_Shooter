@@ -1,4 +1,6 @@
 #pragma once
 #include <string>
-
-extern void fatalError(std::string errorString);
+namespace MexEngine 
+{
+	extern void fatalError(std::string errorString);
+}

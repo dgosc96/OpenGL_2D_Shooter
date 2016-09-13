@@ -1,12 +1,15 @@
 #pragma once
-#include <SDL\SDL.h>
-#include <GL\glew.h>
 #include <vector>
 
-#include "GLSLProgram.h"
-#include "GLTexture.h"
+#include <SDL/SDL.h>
+#include <GL/glew.h>
 
-#include "Sprite.h"
+#include <MexEngine/GLSLProgram.h>
+#include <MexEngine/GLTexture.h>
+#include <MexEngine/Sprite.h>
+#include <MexEngine/Window.h>
+#include <MexEngine/MexEngine.h>
+#include <MexEngine/Camera2D.h>
 
 
 enum class GameState {PLAY, EXIT};
@@ -32,15 +35,16 @@ private:
 
 
 	//Variables
-	SDL_Window* _window;
+	MexEngine::Window _window;
 	int _screenWidth;
 	int _screenHeight;
 	GameState _gameState;
 
 
-	std::vector <Sprite*> _sprites;
+	std::vector <MexEngine::Sprite*> _sprites;
 
-	GLSLProgram _colorProgram;
+	MexEngine::GLSLProgram _colorProgram;
+	MexEngine::Camera2D _camera;
 
 	float _fps;
 	float _maxFPS;

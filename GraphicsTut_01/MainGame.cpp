@@ -1,9 +1,10 @@
 #include "MainGame.h"
 
-#include "Errors.h"
-
-
 #include <iostream>
+
+#include <MexEngine/Errors.h>
+
+
 
 
 
@@ -12,10 +13,11 @@ MainGame::MainGame() :
 	_screenWidth(1024),
 	_screenHeight(768),
 	_time(0.0f),
-	_window(nullptr),
 	_gameState(GameState::PLAY),
 	_maxFPS(61.0f)
-{}
+{
+	_camera.init(_screenWidth, _screenHeight);
+}
 
 MainGame::~MainGame() {
 	for (int i = 0; i < _sprites.size(); i++)
@@ -34,15 +36,15 @@ void MainGame::run()
 {
 	_initSystems();
 
-	_sprites.push_back(new Sprite());
-	_sprites.back()->init(-1.0f, -1.0f, 1.0f, 1.0f, "Textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
+	_sprites.push_back(new MexEngine::Sprite());
+	_sprites.back()->init(-1.0f, -1.0f, _screenWidth / 2, _screenWidth / 2, "Textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 
-	_sprites.push_back(new Sprite());
-	_sprites.back()->init(0.0f, -1.0f, 1.0f, 1.0f, "Textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
+	_sprites.push_back(new MexEngine::Sprite());
+	_sprites.back()->init(_screenWidth / 2, 0.0f, _screenWidth / 2, _screenWidth / 2, "Textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 0; i++)
 	{
-		_sprites.push_back(new Sprite());
+		_sprites.push_back(new MexEngine::Sprite());
 		_sprites.back()->init(-1.0f, 0.0f, 1.0f, 1.0f, "Textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 	}
 
@@ -56,36 +58,9 @@ void MainGame::run()
 //Private methods
 void MainGame::_initSystems()
 {
-	//Initialize SDL
-	SDL_Init(SDL_INIT_EVERYTHING);
+	MexEngine::init();
 
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-	_window = SDL_CreateWindow("Graphics Engine", SDL_WINDOWPOS_CENTERED,
-		SDL_WINDOWPOS_CENTERED, _screenWidth, _screenHeight, SDL_WINDOW_OPENGL);
-
-	if (_window == nullptr) {
-		fatalError("SDL Window could not be created!");
-	}
-
-	SDL_GLContext glContext = SDL_GL_CreateContext(_window);
-	if (glContext == nullptr) {
-		fatalError("SDL_GL context could not be created!");
-	}
-
-	GLenum error = glewInit();
-	if (error != GLEW_OK) {
-		fatalError("Could not initialize glew!");
-	}
-
-	//Check the OpenGL ver.
-	std::printf("***   OpenGL Version: %s   ***\n", glGetString(GL_VERSION));
-
-	//Background color
-	glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
-
-	//Set VSYNC
-	SDL_GL_SetSwapInterval(0);
+	_window.create("Krzychu Przybylski", _screenWidth, _screenHeight);
 
 	_initShaders();
 
@@ -105,7 +80,9 @@ void MainGame::_gameloop() {
 		float startTicks = SDL_GetTicks();
 
 		_processInput();
-		_time += 0.1f;
+		_time += 0.01f;
+
+		_camera.update();
 
 		_drawGame();
 
@@ -116,7 +93,7 @@ void MainGame::_gameloop() {
 
 		if (frameCounter == 60)
 		{
-			std::cout << _fps << std::endl;
+			std::cout << _fps << " FPS" << std::endl;
 			frameCounter = 0;
 		}
 
@@ -132,7 +109,13 @@ void MainGame::_gameloop() {
 
 void MainGame::_processInput() {
 	SDL_Event evnt;
-	while (SDL_PollEvent(&evnt) == true) {
+
+
+	const float CAMERA_SPEED = 20.0f;
+	const float SCALE_SPEED = 0.1f;
+
+	while (SDL_PollEvent(&evnt) == true)
+	{
 		switch (evnt.type) {
 		case SDL_QUIT:
 			_gameState = GameState::EXIT;
@@ -140,7 +123,36 @@ void MainGame::_processInput() {
 		case SDL_MOUSEMOTION:
 			//std::cout << evnt.motion.x << " " << evnt.motion.y << std::endl;
 			break;
+		case SDL_KEYDOWN:
 
+			switch (evnt.key.keysym.sym)
+			{
+			case SDLK_w:
+				_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
+				break;
+
+			case SDLK_s:
+				_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
+				break;
+
+			case SDLK_a:
+				_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
+				break;
+
+			case SDLK_d:
+				_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
+				break;
+
+			case SDLK_q:
+				_camera.setScale(_camera.getScale() + SCALE_SPEED);
+				break;
+
+			case SDLK_e:
+				_camera.setScale(_camera.getScale() - SCALE_SPEED);
+				break;
+			}
+
+			break;
 		}
 	}
 
@@ -156,9 +168,15 @@ void MainGame::_drawGame() {
 	GLint textureLocation = _colorProgram.getUniformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 
-
+	//Set the constantly changing time variable
 	GLint timeLocation = _colorProgram.getUniformLocation("time");
 	glUniform1f(timeLocation, _time);
+
+	//Set the camera matrix
+	GLint pLocation = _colorProgram.getUniformLocation("P");
+	glm::mat4 cameraMatrix = _camera.getCameraMatrix();
+
+	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
 	for (int i = 0; i < _sprites.size(); i++)
 	{
@@ -169,7 +187,7 @@ void MainGame::_drawGame() {
 	glBindTexture(GL_TEXTURE_2D, 0);
 	_colorProgram.unuse();
 
-	SDL_GL_SwapWindow(_window);
+	_window.swapBuffer();
 }
 
 void MainGame::_calculateFPS()

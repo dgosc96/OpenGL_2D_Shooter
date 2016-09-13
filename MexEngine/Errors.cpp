@@ -5,10 +5,13 @@
 #include <iostream>
 #include <conio.h>
 
-void fatalError(std::string errorString) {
-	std::cout << errorString << std::endl;
-	std::cout << "Enter any key to quit...";
-	_getch();
-	SDL_Quit();
-	exit(666);
+namespace MexEngine
+{
+	void fatalError(std::string errorString) {
+		std::cout << errorString << std::endl;
+		std::cout << "Enter any key to quit...";
+		_getch();
+		SDL_Quit();
+		exit(666);
+	}
 }
