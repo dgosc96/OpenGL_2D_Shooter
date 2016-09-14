@@ -11,6 +11,8 @@
 #include <MexEngine/MexEngine.h>
 #include <MexEngine/Camera2D.h>
 
+#include <MexEngine/SpriteBatch.h>
+
 
 enum class GameState {PLAY, EXIT};
 
@@ -41,10 +43,11 @@ private:
 	GameState _gameState;
 
 
-	std::vector <MexEngine::Sprite*> _sprites;
 
 	MexEngine::GLSLProgram _colorProgram;
 	MexEngine::Camera2D _camera;
+
+	MexEngine::SpriteBatch _spriteBatch;
 
 	float _fps;
 	float _maxFPS;

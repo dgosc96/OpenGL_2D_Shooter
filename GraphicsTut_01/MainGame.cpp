@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <MexEngine/Errors.h>
+#include <MexEngine/ResourceManager.h>
 
 
 
@@ -20,10 +21,7 @@ MainGame::MainGame() :
 }
 
 MainGame::~MainGame() {
-	for (int i = 0; i < _sprites.size(); i++)
-	{
-		delete _sprites[i];
-	}
+
 
 
 }
@@ -36,17 +34,7 @@ void MainGame::run()
 {
 	_initSystems();
 
-	_sprites.push_back(new MexEngine::Sprite());
-	_sprites.back()->init(-1.0f, -1.0f, _screenWidth / 2, _screenWidth / 2, "Textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 
-	_sprites.push_back(new MexEngine::Sprite());
-	_sprites.back()->init(_screenWidth / 2, 0.0f, _screenWidth / 2, _screenWidth / 2, "Textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
-
-	for (int i = 0; i < 0; i++)
-	{
-		_sprites.push_back(new MexEngine::Sprite());
-		_sprites.back()->init(-1.0f, 0.0f, 1.0f, 1.0f, "Textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
-	}
 
 
 	_gameloop();
@@ -60,9 +48,11 @@ void MainGame::_initSystems()
 {
 	MexEngine::init();
 
-	_window.create("Krzychu Przybylski", _screenWidth, _screenHeight);
+	_window.create("MexEngine", _screenWidth, _screenHeight);
 
 	_initShaders();
+
+	_spriteBatch.init();
 
 }
 
@@ -178,10 +168,27 @@ void MainGame::_drawGame() {
 
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
-	for (int i = 0; i < _sprites.size(); i++)
+	_spriteBatch.begin();
+
+
+	glm::vec4 pos(0.0f, 0.0f, 50.0f, 50.0f);
+	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
+	static MexEngine::GLTexture texture = MexEngine::ResourceManager::getTexture("Textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
+	MexEngine::Color color;
+	color.r = 255;
+	color.g = 255;
+	color.b = 255;
+	color.a = 255;
+
+	for (size_t i = 0; i < 1000; i++)
 	{
-		_sprites[i]->draw();
+		_spriteBatch.draw(pos, uv, texture.id, 0.0f, color);
+		_spriteBatch.draw(pos + glm::vec4(50, 0, 0, 0), uv, texture.id, 0.0f, color);
 	}
+
+	_spriteBatch.end();
+
+	_spriteBatch.renderBatch();
 
 
 	glBindTexture(GL_TEXTURE_2D, 0);
