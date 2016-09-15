@@ -118,19 +118,19 @@ void MainGame::_processInput() {
 			switch (evnt.key.keysym.sym)
 			{
 			case SDLK_w:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
-				break;
-
-			case SDLK_s:
 				_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
 				break;
 
+			case SDLK_s:
+				_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
+				break;
+
 			case SDLK_a:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
+				_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
 				break;
 
 			case SDLK_d:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
+				_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
 				break;
 
 			case SDLK_q:
@@ -180,7 +180,8 @@ void MainGame::_drawGame() {
 	color.b = 255;
 	color.a = 255;
 
-	for (size_t i = 0; i < 1; i++)
+
+	for (size_t i = 0; i < 1000; i++)
 	{
 		_spriteBatch.draw(pos, uv, texture.id, 0.0f, color);
 		_spriteBatch.draw(pos + glm::vec4(50, 0, 0, 0), uv, texture.id, 0.0f, color);

@@ -13,11 +13,6 @@ namespace MexEngine {
 
 	SpriteBatch::~SpriteBatch()
 	{
-		//for (size_t i = 0; i < _glyphs.size(); i++)
-		//{
-		//	delete _glyphs[i];
-		//}
-
 	}
 
 	void SpriteBatch::init()
@@ -31,6 +26,7 @@ namespace MexEngine {
 		_sortType = sortType;
 		_renderBatches.clear();
 		_glyphs.clear();
+
 	}
 
 	void SpriteBatch::end()
