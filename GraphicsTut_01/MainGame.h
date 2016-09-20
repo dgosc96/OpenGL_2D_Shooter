@@ -10,6 +10,8 @@
 #include <MexEngine/Window.h>
 #include <MexEngine/MexEngine.h>
 #include <MexEngine/Camera2D.h>
+#include <MexEngine/InputManager.h>
+#include <MexEngine/Timing.h>
 
 #include <MexEngine/SpriteBatch.h>
 
@@ -33,7 +35,7 @@ private:
 	void _gameloop();
 	void _processInput();
 	void _drawGame();
-	void _calculateFPS();
+
 
 
 	//Variables
@@ -49,9 +51,13 @@ private:
 
 	MexEngine::SpriteBatch _spriteBatch;
 
-	float _fps;
+	MexEngine::InputManager _inputManager;
+	MexEngine::FpsLimiter _fpsLimiter;
+
+
 	float _maxFPS;
-	float _frameTime;
+	float _fps;
+
 
 	float _time;
 };

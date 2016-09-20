@@ -1,8 +1,32 @@
 #pragma once
-class InputManager
-{
-public:
-	InputManager();
-	~InputManager();
-};
 
+#include <unordered_map>
+#include <glm\glm.hpp>
+
+
+namespace MexEngine 
+{
+
+	class InputManager
+	{
+	public:
+		InputManager();
+		~InputManager();
+
+		void pressKey(unsigned int keyID);
+		void releaseKey(unsigned int keyID);
+
+		void setMouseCoords(float x, float y);
+
+		bool isKeyPressed(unsigned int keyID);
+
+		//Getters:
+		glm::vec2 getMouseCoords() const { return _mouseCoords; }
+
+	private:
+		std::unordered_map<unsigned int, bool> _keyMap;
+		glm::vec2 _mouseCoords;
+
+	};
+
+}

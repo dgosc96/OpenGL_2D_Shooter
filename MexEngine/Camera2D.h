@@ -13,6 +13,8 @@ namespace MexEngine
 
 		void update();
 
+		glm::vec2 convertScreenToWorld(glm::vec2 screenCoords);
+
 		//Setters
 		void setPosition(const glm::vec2& newPosition) { _position = newPosition; _needsMartixUpdate = true;
 		}

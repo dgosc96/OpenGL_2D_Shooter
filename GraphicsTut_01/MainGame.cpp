@@ -15,30 +15,23 @@ MainGame::MainGame() :
 	_screenHeight(768),
 	_time(0.0f),
 	_gameState(GameState::PLAY),
-	_maxFPS(61.0f)
+	_maxFPS(60.0f)
 {
 	_camera.init(_screenWidth, _screenHeight);
 }
 
-MainGame::~MainGame() {
-
-
-
+MainGame::~MainGame() 
+{
 }
 
 
 
 //Public methods
-
 void MainGame::run()
 {
 	_initSystems();
-
-
-
-
+	
 	_gameloop();
-
 }
 
 
@@ -54,6 +47,8 @@ void MainGame::_initSystems()
 
 	_spriteBatch.init();
 
+	_fpsLimiter.init(_maxFPS);
+
 }
 
 void MainGame::_initShaders() {
@@ -67,7 +62,7 @@ void MainGame::_initShaders() {
 void MainGame::_gameloop() {
 	while (_gameState != GameState::EXIT)
 	{
-		float startTicks = SDL_GetTicks();
+		_fpsLimiter.begin();
 
 		_processInput();
 		_time += 0.01f;
@@ -76,23 +71,15 @@ void MainGame::_gameloop() {
 
 		_drawGame();
 
-		_calculateFPS();
+		_fps = _fpsLimiter.end();
 
 		static int frameCounter = 0;
 		frameCounter++;
 
-		if (frameCounter == 60)
+		if (frameCounter == 10000)
 		{
-			std::cout << _fps << " FPS" << std::endl;
+			std::cout <<(int)_fps << " FPS" << std::endl;
 			frameCounter = 0;
-		}
-
-
-		float frameTicks = SDL_GetTicks() - startTicks;
-
-		if (1000.0f / _maxFPS > frameTicks && _maxFPS != 0.0f)
-		{
-			SDL_Delay(1000.0f / _maxFPS - frameTicks);
 		}
 	}
 }
@@ -100,8 +87,7 @@ void MainGame::_gameloop() {
 void MainGame::_processInput() {
 	SDL_Event evnt;
 
-
-	const float CAMERA_SPEED = 20.0f;
+	const float CAMERA_SPEED = 5.0f;
 	const float SCALE_SPEED = 0.1f;
 
 	while (SDL_PollEvent(&evnt) == true)
@@ -110,43 +96,65 @@ void MainGame::_processInput() {
 		case SDL_QUIT:
 			_gameState = GameState::EXIT;
 			break;
+		case SDL_KEYDOWN:
+			_inputManager.pressKey(evnt.key.keysym.sym);
+			break;
+		case SDL_KEYUP:
+			_inputManager.releaseKey(evnt.key.keysym.sym);
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			_inputManager.pressKey(evnt.button.button);
+			break;
+		case SDL_MOUSEBUTTONUP:
+			_inputManager.releaseKey(evnt.button.button);
+			break;
 		case SDL_MOUSEMOTION:
 			//std::cout << evnt.motion.x << " " << evnt.motion.y << std::endl;
-			break;
-		case SDL_KEYDOWN:
 
-			switch (evnt.key.keysym.sym)
-			{
-			case SDLK_w:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
-				break;
-
-			case SDLK_s:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
-				break;
-
-			case SDLK_a:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
-				break;
-
-			case SDLK_d:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
-				break;
-
-			case SDLK_q:
-				_camera.setScale(_camera.getScale() + SCALE_SPEED);
-				break;
-
-			case SDLK_e:
-				_camera.setScale(_camera.getScale() - SCALE_SPEED);
-				break;
-			}
-
+			_inputManager.setMouseCoords(evnt.motion.x, evnt.motion.y);
 			break;
 		}
 	}
 
+	if (_inputManager.isKeyPressed(SDLK_w))
+	{
+		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
+	}
+
+	if (_inputManager.isKeyPressed(SDLK_s))
+	{
+		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
+	}
+
+	if (_inputManager.isKeyPressed(SDLK_a))
+	{
+		_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
+	}
+
+	if (_inputManager.isKeyPressed(SDLK_d))
+	{
+		_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
+	}
+
+	if (_inputManager.isKeyPressed(SDLK_q))
+	{
+		_camera.setScale(_camera.getScale() + SCALE_SPEED);
+	}
+
+	if (_inputManager.isKeyPressed(SDLK_e))
+	{
+		_camera.setScale(_camera.getScale() - SCALE_SPEED);
+	}
+	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT))
+	{
+		glm::vec2 mouseCoords = _inputManager.getMouseCoords();
+		mouseCoords = _camera.convertScreenToWorld(mouseCoords);
+		std::cout << mouseCoords.x << " " << mouseCoords.y << std::endl;
+	}
+
 }
+
+
 
 void MainGame::_drawGame() {
 
@@ -181,10 +189,10 @@ void MainGame::_drawGame() {
 	color.a = 255;
 
 
-	for (size_t i = 0; i < 1000; i++)
+	for (size_t i = 0; i < 1; i++)
 	{
 		_spriteBatch.draw(pos, uv, texture.id, 0.0f, color);
-		_spriteBatch.draw(pos + glm::vec4(50, 0, 0, 0), uv, texture.id, 0.0f, color);
+		//_spriteBatch.draw(pos + glm::vec4(50, 0, 0, 0), uv, texture.id, 0.0f, color);
 	}
 
 	_spriteBatch.end();
@@ -198,50 +206,3 @@ void MainGame::_drawGame() {
 	_window.swapBuffer();
 }
 
-void MainGame::_calculateFPS()
-{
-	static const int NUM_SAMPLES = 100;
-	static float frametimes[NUM_SAMPLES];
-	static int currentFrame = 0;
-
-
-	static float prevTicks = SDL_GetTicks();
-
-	float currentTicks = SDL_GetTicks();
-
-	_frameTime = currentTicks - prevTicks;
-	frametimes[currentFrame % NUM_SAMPLES] = _frameTime;
-
-	prevTicks = currentTicks;
-
-	int count;
-
-	currentFrame++;
-	if (currentFrame < NUM_SAMPLES)
-	{
-		count = currentFrame;
-	}
-	else
-	{
-		count = NUM_SAMPLES;
-	}
-
-	float frameTimeAverage = 0;
-	for (int i = 0; i < count; i++)
-	{
-		frameTimeAverage += frametimes[i];
-	}
-
-	frameTimeAverage /= count;
-
-	if (frameTimeAverage > 0)
-	{
-		_fps = 1000.0f / frameTimeAverage;
-	}
-	else
-	{
-		_fps = 0.0f;
-	}
-
-
-}
