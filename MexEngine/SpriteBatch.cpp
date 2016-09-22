@@ -13,6 +13,8 @@ namespace MexEngine {
 
 	SpriteBatch::~SpriteBatch()
 	{
+
+
 	}
 
 	void SpriteBatch::init()
@@ -23,6 +25,11 @@ namespace MexEngine {
 
 	void SpriteBatch::begin(GlyphSortType sortType /*= GlyphSortType::TEXTURE*/)
 	{
+		for (size_t i = 0; i < _glyphs.size(); i++)
+		{
+			delete _glyphs[i];
+		}
+
 		_sortType = sortType;
 		_renderBatches.clear();
 		_glyphs.clear();
@@ -33,10 +40,7 @@ namespace MexEngine {
 	{
 		_sortGlyphs();
 		_createRenderBatches();
-		for (size_t i = 0; i < _glyphs.size(); i++)
-		{
-			delete _glyphs[i];
-		}
+
 
 	}
 
@@ -45,7 +49,7 @@ namespace MexEngine {
 		Glyph* newGlyph = new Glyph;
 
 		newGlyph->texture = texture;
-		newGlyph->depth = depth;
+		newGlyph->depth	= depth;
 
 		newGlyph->topLeft.color = color;
 		newGlyph->topLeft.setPosition(destRect.x, destRect.y + destRect.w);
@@ -105,8 +109,8 @@ namespace MexEngine {
 		offset += 6;
 
 		for (size_t currGlyph = 1; currGlyph < _glyphs.size(); currGlyph++)
-		{
-			if (_glyphs[currGlyph]->texture != _glyphs[currGlyph - 1]->texture)
+		{	
+			if ((_glyphs[currGlyph]->texture) != (_glyphs[currGlyph - 1]->texture))
 			{
 				_renderBatches.emplace_back(offset, 6, _glyphs[currGlyph]->texture);
 			}
@@ -115,7 +119,7 @@ namespace MexEngine {
 				_renderBatches.back().numVertices += 6;
 			}
 
-			_renderBatches.emplace_back(0, 6, _glyphs[currGlyph]->texture);
+		
 			vertices[currVert++] = _glyphs[currGlyph]->topLeft;
 			vertices[currVert++] = _glyphs[currGlyph]->bottomLeft;
 			vertices[currVert++] = _glyphs[currGlyph]->bottomRight;
@@ -167,6 +171,7 @@ namespace MexEngine {
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 
 
+		//unbind
 		glBindVertexArray(0);
 	}
 
@@ -174,15 +179,15 @@ namespace MexEngine {
 	{
 		switch (_sortType)
 		{
-		case MexEngine::GlyphSortType::FRONT_TO_BACK:
+		case GlyphSortType::FRONT_TO_BACK:
 			std::stable_sort(_glyphs.begin(), _glyphs.end(), _compareFrontToBack);
 			break;
 
-		case MexEngine::GlyphSortType::BACK_TO_FRONT:
+		case GlyphSortType::BACK_TO_FRONT:
 			std::stable_sort(_glyphs.begin(), _glyphs.end(), _compareBackToBack);
 			break;
 
-		case MexEngine::GlyphSortType::TEXTURE:
+		case GlyphSortType::TEXTURE:
 			std::stable_sort(_glyphs.begin(), _glyphs.end(), _compareTexture);
 			break;
 		}

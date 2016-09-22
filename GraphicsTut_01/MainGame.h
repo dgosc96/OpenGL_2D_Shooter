@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <random>
 
 #include <SDL/SDL.h>
 #include <GL/glew.h>
@@ -14,6 +15,10 @@
 #include <MexEngine/Timing.h>
 
 #include <MexEngine/SpriteBatch.h>
+
+
+#include "Bullet.h"
+#include "Player.h"
 
 
 enum class GameState {PLAY, EXIT};
@@ -40,6 +45,9 @@ private:
 
 	//Variables
 	MexEngine::Window _window;
+	MexEngine::WindowFlags _windowMode;
+
+
 	int _screenWidth;
 	int _screenHeight;
 	GameState _gameState;
@@ -55,10 +63,21 @@ private:
 	MexEngine::FpsLimiter _fpsLimiter;
 
 
+
+	std::vector<Bullet> _bullets;
+	Player _player;
+
 	float _maxFPS;
 	float _fps;
 
 
 	float _time;
+
+
+
+	std::random_device::result_type _seed = std::random_device()();
+	std::mt19937 *_randomEngine = new std::mt19937(_seed);
+
+	
 };
 

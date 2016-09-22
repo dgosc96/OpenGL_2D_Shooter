@@ -6,7 +6,7 @@
 
 namespace MexEngine
 {
-	enum WindowFlags { INVISIBLE = 0x1, FULLSCREEN = 0x2, BORDERLESS = 0x4 };
+	enum WindowFlags { INVISIBLE = 0x1, FULLSCREEN = 0x2, BORDERLESS = 0x4, WINDOWED = 0x8 };
 
 	class Window
 	{
@@ -14,9 +14,13 @@ namespace MexEngine
 		Window();
 		~Window();
 
+		SDL_DisplayMode getDisplayResolution();
+
 		int create(std::string windowName, int screenWidth, int screenHeight, unsigned int currentFlags = 0);
 
 		void swapBuffer();
+
+
 
 		int getScreenWidth()  { return _screenWidth; }
 		int getScreenHeight() { return _screenHeight; }

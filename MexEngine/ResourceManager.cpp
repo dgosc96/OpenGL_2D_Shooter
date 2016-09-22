@@ -7,5 +7,5 @@ namespace MexEngine
 		return _textureCache.getTexture(texturePath);
 	}
 
-	TextureCache ResourceManager::_textureCache;
+	TextureCache ResourceManager:: _textureCache;
 }

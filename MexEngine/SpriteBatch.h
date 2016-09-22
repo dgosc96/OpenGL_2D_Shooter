@@ -31,9 +31,9 @@ namespace MexEngine
 	{
 	public:
 		RenderBatch(GLuint Offset, GLuint NumVertices, GLuint Texture) :
-			offset(Offset),
-			numVertices(NumVertices),
-			texture(Texture)
+			offset		(Offset),
+			numVertices	(NumVertices),
+			texture		(Texture)
 			{}
 
 		GLuint offset;
@@ -59,17 +59,19 @@ namespace MexEngine
 		void _createVertexArray();
 		void _sortGlyphs();
 
-		static bool _compareFrontToBack(Glyph* a, Glyph* b);
-		static bool _compareBackToBack(Glyph* a, Glyph* b);
-		static bool _compareTexture(Glyph* a, Glyph* b);
+		static bool _compareFrontToBack	(Glyph* a, Glyph* b);
+		static bool _compareBackToBack	(Glyph* a, Glyph* b);
+		static bool _compareTexture		(Glyph* a, Glyph* b);
 
 		GLuint _vbo;
 		GLuint _vao;
 
 		GlyphSortType _sortType;
 
-		std::vector<Glyph*> _glyphs;
-		std::vector<RenderBatch>  _renderBatches;
+		std::vector<Glyph*>			_glyphs;
+		std::vector<RenderBatch>	_renderBatches;
+
+
 	};
 
 }
