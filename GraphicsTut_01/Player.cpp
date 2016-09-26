@@ -102,20 +102,14 @@ void Player::updateBullets()
 bool Player::_canIMove(glm::vec2 newPosition)
 {	
 
+	int xTileNumb = ((int)newPosition.x + 9) / 50;
 
-	int xChange = ((int)newPosition.x + 9) % 50;
-	int xTileNumb = (((int)newPosition.x  + 9)- xChange) / 50;
-
-	int yChange = ((int)newPosition.y + 9) % 50;
-	int yTileNumb = (((int)newPosition.y + 9) - yChange) / 50;
+	int yTileNumb = ((int)newPosition.y + 9) / 50;
 
 
+	int yTileNumbU = ((int)newPosition.y + 42) / 50;
 
-	int yChangeU = ((int)newPosition.y + 42 ) % 50;
-	int yTileNumbU = (((int)newPosition.y + 42) - yChangeU) / 50;
-
-	int xChangeR = ((int)newPosition.x + 40) % 50;
-	int xTileNumbR = (((int)newPosition.x + 40) - xChangeR) / 50;
+	int xTileNumbR = ((int)newPosition.x + 40) / 50;
 
 
 	if (_leveldata[yTileNumb][xTileNumb] == '#' ||
