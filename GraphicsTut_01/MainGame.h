@@ -19,6 +19,7 @@
 
 #include "Bullet.h"
 #include "Player.h"
+#include "Level.h"
 
 
 enum class GameState {PLAY, EXIT};
@@ -45,7 +46,7 @@ private:
 
 	//Variables
 	MexEngine::Window _window;
-	MexEngine::WindowFlags _windowMode;
+	
 
 
 	int _screenWidth;
@@ -64,8 +65,10 @@ private:
 
 
 
-	std::vector<Bullet> _bullets;
+
 	Player _player;
+
+	Level _level;
 
 	float _maxFPS;
 	float _fps;
@@ -74,9 +77,6 @@ private:
 	float _time;
 
 
-
-	std::random_device::result_type _seed = std::random_device()();
-	std::mt19937 *_randomEngine = new std::mt19937(_seed);
 
 	
 };

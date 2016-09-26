@@ -46,15 +46,15 @@ namespace MexEngine
 	{
 		Uint32 flags = SDL_WINDOW_OPENGL;
 
-		if (currentFlags & INVISIBLE)
+		if (currentFlags & INVISIBLE || _windowMode & INVISIBLE)
 		{
 			flags |= SDL_WINDOW_HIDDEN;
 		}
-		if (currentFlags & FULLSCREEN)
+		if (currentFlags & FULLSCREEN || _windowMode & FULLSCREEN)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
-		if (currentFlags & BORDERLESS)
+		if (currentFlags & BORDERLESS || _windowMode & BORDERLESS)
 		{
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
@@ -81,7 +81,7 @@ namespace MexEngine
 		std::printf("***   OpenGL Version: %s   ***\n", glGetString(GL_VERSION));
 
 		//Background color
-		glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+		glClearColor(0.0f, 0.11f, 0.12f, 1.0f);
 
 		//Set VSYNC
 		SDL_GL_SetSwapInterval(0);

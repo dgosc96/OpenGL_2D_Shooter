@@ -13,12 +13,16 @@ public:
 	void draw(MexEngine::SpriteBatch& spriteBatch);
 
 	//Returns true when bullet is out of life
-	bool update();
+	bool update( static std::vector<std::string> &leveldata);
 
 private:
+	bool _canIMove(glm::vec2 &newPosition, std::vector<std::string> &leveldata);
+
+
 	int			_lifeTime;
 	float		_speed;
 	glm::vec2	_direction;
 	glm::vec2	_position;
+
 };
 

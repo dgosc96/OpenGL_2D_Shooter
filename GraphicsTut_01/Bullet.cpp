@@ -2,12 +2,13 @@
 
 
 
-Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float speed, int lifeTime)
+Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float speed, int lifeTime) :
+	_position  (pos),
+	_direction (dir),
+	_speed (speed),
+	_lifeTime (lifeTime)
+
 {
-	_position = pos;
-	_direction = dir;
-	_speed = speed;
-	_lifeTime = lifeTime;
 }
 
 
@@ -23,7 +24,7 @@ void Bullet::draw(MexEngine::SpriteBatch& spriteBatch)
 {
 	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
 
-	static MexEngine::GLTexture texture = MexEngine::ResourceManager::getTexture("Textures/jimmyJump_pack/PNG/Bubble_small.png");
+	static MexEngine::GLTexture texture = MexEngine::ResourceManager::getTexture("Textures/jimmyJump_pack/PNG/Bullet.png");
 
 	MexEngine::Color color;
 
@@ -35,22 +36,40 @@ void Bullet::draw(MexEngine::SpriteBatch& spriteBatch)
 	glm::vec4 posAndSize = glm::vec4(_position.x, _position.y, 10, 10);
 
 	spriteBatch.draw(posAndSize, uv, texture.id, 0.0f, color);
-		
-	
+
+
 
 }
 
-bool Bullet::update()
+bool Bullet::update(std::vector<std::string> &leveldata)
 {
-	_position += _direction * _speed;
+	glm::vec2 newPos = _position + (_direction * _speed);
 	_lifeTime--;
 
-	if (_lifeTime == 0)
+	if (_lifeTime == 0 || _canIMove(newPos, leveldata) == false)
 	{
 		return true;
 	}
 
+	_position = newPos;
 	return false;
-	
+
+
+}
+
+
+bool Bullet::_canIMove(glm::vec2 &newPosition, std::vector<std::string> &leveldata)
+{
+	int xChange = (int)newPosition.x  % 50;
+	int xTileNumb = ((int)newPosition.x - xChange) / 50;
+
+	int yChange = (int)newPosition.y % 50;
+	int yTileNumb = ((int)newPosition.y - yChange) / 50;
+
+	if (leveldata[yTileNumb][xTileNumb] == '#')
+	{
+		return false;
+	}
+	return true;
 
 }

@@ -6,7 +6,12 @@
 
 namespace MexEngine
 {
-	enum WindowFlags { INVISIBLE = 0x1, FULLSCREEN = 0x2, BORDERLESS = 0x4, WINDOWED = 0x8 };
+	enum WindowFlags 
+	{ 
+		INVISIBLE = 0x1, 
+		FULLSCREEN = 0x2, 
+		BORDERLESS = 0x4, 
+	};
 
 	class Window
 	{
@@ -20,14 +25,16 @@ namespace MexEngine
 
 		void swapBuffer();
 
+		void setWindowMode(unsigned int windowMode)	{ _windowMode = windowMode; }
 
-
-		int getScreenWidth()  { return _screenWidth; }
-		int getScreenHeight() { return _screenHeight; }
+		int getScreenWidth()						{ return _screenWidth; }
+		int getScreenHeight()						{ return _screenHeight; }
 
 	private:
 		SDL_Window* _sdlWindow;
 		int _screenWidth;
 		int _screenHeight;
+
+		unsigned int _windowMode;
 	};
 }
