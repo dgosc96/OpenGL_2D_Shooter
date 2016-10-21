@@ -13,7 +13,10 @@ namespace MexEngine {
 
 	SpriteBatch::~SpriteBatch()
 	{
-
+		for (size_t i = 0; i < _glyphs.size(); i++)
+		{
+			delete _glyphs[i];
+		}
 
 	}
 
@@ -48,12 +51,12 @@ namespace MexEngine {
 	{
 		Glyph* newGlyph = new Glyph;
 
-		newGlyph->texture = texture;
-		newGlyph->depth	= depth;
+		newGlyph->texture	= texture;
+		newGlyph->depth		= depth;
 
 		newGlyph->topLeft.color = color;
-		newGlyph->topLeft.setPosition(destRect.x, destRect.y + destRect.w);
-		newGlyph->topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
+		newGlyph->topLeft.setPosition	(destRect.x, destRect.y + destRect.w);
+		newGlyph->topLeft.setUV			(uvRect.x, uvRect.y + uvRect.w);
 
 		newGlyph->bottomLeft.color = color;
 		newGlyph->bottomLeft.setPosition(destRect.x, destRect.y);
@@ -75,12 +78,16 @@ namespace MexEngine {
 	void SpriteBatch::renderBatch()
 	{
 		glBindVertexArray(_vao);
+
 		for (size_t i = 0; i < _renderBatches.size(); i++)
 		{
 			glBindTexture(GL_TEXTURE_2D, _renderBatches[i].texture);
-
 			glDrawArrays(GL_TRIANGLES, _renderBatches[i].offset, _renderBatches[i].numVertices);
 		}
+		
+
+
+
 		glBindVertexArray(0);
 	}
 
@@ -161,17 +168,17 @@ namespace MexEngine {
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
 
-		//Position attribute pointer
+	
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 
-		//Color attribute pointer
+
 		glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
-		//UV attribute pointer
+
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 
 
-		//unbind
+
 		glBindVertexArray(0);
 	}
 

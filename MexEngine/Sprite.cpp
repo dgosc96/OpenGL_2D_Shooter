@@ -36,7 +36,7 @@ namespace MexEngine
 
 		Vertex vertexData[6];
 
-		//First Triangle
+	
 		vertexData[0].setPosition(x + width, y + height);
 		vertexData[0].setUV(1.0f, 1.0f);
 
@@ -46,7 +46,7 @@ namespace MexEngine
 		vertexData[2].setPosition(x, y);
 		vertexData[2].setUV(0.0f, 0.0f);
 
-		//Second Triangle
+		
 		vertexData[3].setPosition(x, y);
 		vertexData[3].setUV(0.0f, 0.0f);
 
@@ -87,13 +87,13 @@ namespace MexEngine
 
 		glEnableVertexAttribArray(2);
 
-		//Position attribute pointer
+	
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 
-		//Color attribute pointer
+	
 		glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
-		//UV attribute pointer
+		
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 
 

@@ -20,7 +20,6 @@ namespace MexEngine
 
 		bool isKeyPressed(unsigned int keyID);
 
-		//Getters:
 		glm::vec2 getMouseCoords() const { return _mouseCoords; }
 
 	private:

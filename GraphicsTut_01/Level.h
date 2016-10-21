@@ -6,27 +6,30 @@
 #include <glm/glm.hpp>
 #include <MexEngine/SpriteBatch.h>
 
-#include "Wall.h"
+
+#include "CONSTANTS.h"
 
 
 class Level
 {
 public:
-	Level();
+	Level(const std::string &filePath);
 	~Level();
 
-	void loadFile(std::string filePath);
+	void loadFile(const std::string &filePath);
 
-	void draw(MexEngine::SpriteBatch& spriteBatch);
+	void draw();
 
 	glm::vec2 getPlayerPos() { return _playerPos; }
 
-	std::vector<std::string> getLvlData() { return _levelData; }
+
+	const std::vector<std::string>& getLevelData() const { return _levelData; }
+
 
 private:
 	std::vector<std::string>	_levelData;
-	std::vector<Wall>			_walls;
-	std::vector<Floor>			_floors;
+
+	MexEngine::SpriteBatch _spriteBatch;
 
 	glm::vec2					_playerPos;
 

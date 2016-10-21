@@ -1,12 +1,19 @@
 #include "Level.h"
 
 #include <fstream>
-
-#include <MexEngine/Errors.h>
 #include <iostream>
 
-Level::Level()
+#include <MexEngine/Errors.h>
+#include <MexEngine/ResourceManager.h>
+
+
+
+Level::Level(const std::string &filePath)
 {
+	_spriteBatch.init();
+	loadFile(filePath);
+	
+
 }
 
 
@@ -15,8 +22,12 @@ Level::~Level()
 }
 
 
-void Level::loadFile(std::string filePath)
+void Level::loadFile(const std::string &filePath)
 {
+	GLint wallTexture = MexEngine::ResourceManager::getTexture("Textures/other/PNG/wall.png").id;
+	GLint floorTexture = MexEngine::ResourceManager::getTexture("Textures/other/PNG/floor.png").id;
+
+
 	std::ifstream LevelFile;
 	LevelFile.open(filePath);
 
@@ -25,47 +36,54 @@ void Level::loadFile(std::string filePath)
 		MexEngine::fatalError("Failed to open level file. ");
 	}
 
+	_spriteBatch.begin();
+
+	MexEngine::Color color;
+	glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 
 	std::string line;
+
+	size_t y = 0;
+
 	while (std::getline(LevelFile, line))
 	{
-		_levelData.push_back(line);
 
-
-		static size_t y = 0;
 
 		for (size_t x = 0; x < line.size(); x++)
 		{
+
+			glm::vec4 destRect(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
+
+
 			switch (line[x])
 			{
 			case '#':
-				_walls.emplace_back(glm::vec2(x * 50.0f, y * 50.0f), glm::vec2(50.0f, 50.0f), "Textures/other/PNG/wall.png");
+				_spriteBatch.draw(destRect, uvRect, wallTexture, 0.0f, color);
+
 				break;
 			case ' ':
-				_floors.emplace_back(glm::vec2(x * 50.0f, y * 50.0f), glm::vec2(50.0f, 50.0f), "Textures/other/PNG/floor.png");
+				_spriteBatch.draw(destRect, uvRect, floorTexture, 0.0f, color);
+
 				break;
 			case '@':
-				_setPlayerPos(glm::vec2(x * 50.0f, y * 50.0f));
-				_floors.emplace_back(glm::vec2(x * 50.0f, y * 50.0f), glm::vec2(50.0f, 50.0f), "Textures/other/PNG/floor.png");
+				_setPlayerPos(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH));
+
+				line[x] = ' ';
+				_spriteBatch.draw(destRect, uvRect, floorTexture, 0.0f, color);
 				break;
 			default:
 				break;
 			}
 
 		}
+		_levelData.push_back(line);
 		y++;
 	}
-
+	
+	_spriteBatch.end();
 }
 
-void Level::draw(MexEngine::SpriteBatch& spriteBatch)
+void Level::draw()
 {
-	for (size_t i = 0; i < _floors.size(); i++)
-	{
-		_floors[i].draw(spriteBatch);
-	}
-	for (size_t i = 0; i < _walls.size(); i++)
-	{
-		_walls[i].draw(spriteBatch);
-	}
+	_spriteBatch.renderBatch();
 }

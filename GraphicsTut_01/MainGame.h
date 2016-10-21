@@ -35,7 +35,6 @@ public:
 	
 
 private:
-	//Methods
 	void _initSystems();
 	void _initShaders();
 	void _gameloop();
@@ -44,7 +43,6 @@ private:
 
 
 
-	//Variables
 	MexEngine::Window _window;
 	
 
@@ -55,26 +53,26 @@ private:
 
 
 
-	MexEngine::GLSLProgram _colorProgram;
-	MexEngine::Camera2D _camera;
+	MexEngine::GLSLProgram	_colorProgram;
+	MexEngine::Camera2D		_camera;
 
-	MexEngine::SpriteBatch _spriteBatch;
+	MexEngine::SpriteBatch	_spriteBatch;
 
 	MexEngine::InputManager _inputManager;
-	MexEngine::FpsLimiter _fpsLimiter;
+	MexEngine::FpsLimiter	_fpsLimiter;
 
 
 
 
-	Player _player;
+	Player				_player;
+	int					_currLvl;
+	std::vector<Level*>	_level;
 
-	Level _level;
-
-	float _maxFPS;
-	float _fps;
+	float				_maxFPS;
+	float				_fps;
 
 
-	float _time;
+	float				_time;
 
 
 

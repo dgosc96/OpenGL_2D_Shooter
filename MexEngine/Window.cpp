@@ -16,12 +16,12 @@ namespace MexEngine
 
 	SDL_DisplayMode Window::getDisplayResolution()
 	{
-		// Declare display mode structure to be filled in.
+	
 		SDL_DisplayMode current;
 
 		SDL_Init(SDL_INIT_VIDEO);
 
-		// Get current display mode of all displays.
+	
 		for (size_t i = 0; i < SDL_GetNumVideoDisplays(); ++i) 
 		{
 
@@ -29,13 +29,15 @@ namespace MexEngine
 
 			if (should_be_zero != 0)
 			{
-				// In case of error...
+				
 				SDL_Log("Could not get display mode for video display #%d: %s", i, SDL_GetError());
+				fatalError("");
+				exit(100);
 			}
 
 			else
 			{
-				// On success, print the current display mode.
+			
 				SDL_Log("Display #%d: current display mode is %dx%dpx @ %dhz.", i, current.w, current.h, current.refresh_rate);
 				return current;
 			}
@@ -77,18 +79,19 @@ namespace MexEngine
 			fatalError("Could not initialize glew!");
 		}
 
-		//Check the OpenGL ver.
+	
 		std::printf("***   OpenGL Version: %s   ***\n", glGetString(GL_VERSION));
 
-		//Background color
+		
 		glClearColor(0.0f, 0.11f, 0.12f, 1.0f);
 
-		//Set VSYNC
+		
 		SDL_GL_SetSwapInterval(0);
 
-		//Enable alpha blend
+		
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
 
 		return 0;

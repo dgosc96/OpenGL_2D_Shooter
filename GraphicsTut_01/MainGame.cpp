@@ -5,31 +5,33 @@
 #include <MexEngine/Errors.h>
 #include <MexEngine/ResourceManager.h>
 #include "Utilities.h"
+#include "CONSTANTS.h"
 
-#define DEBUG 1
+#include "DEBUG.h"
 
 
 
 
 
 MainGame::MainGame() :
-	_screenWidth		(1024),
-	_screenHeight		(768),
-	_time				(0.0f),
-	_gameState			(GameState::PLAY),
-	_maxFPS				(60.0f)
+	_screenWidth(1024),
+	_screenHeight(768),
+	_time(0.0f),
+	_gameState(GameState::PLAY),
+	_maxFPS(60.0f),
+	_currLvl(0)
 {
 
 	SDL_DisplayMode currentDisplay = _window.getDisplayResolution();
 #if DEBUG 
 
 #else
-	_screenWidth	= currentDisplay.w;
-	_screenHeight	= currentDisplay.h;
-	
+	_screenWidth = currentDisplay.w;
+	_screenHeight = currentDisplay.h;
+
 	_window.setWindowMode(MexEngine::BORDERLESS);
 
-#endif // DEBUG
+#endif
 
 
 
@@ -38,11 +40,14 @@ MainGame::MainGame() :
 
 MainGame::~MainGame()
 {
+	for (size_t i = 0; i < _level.size(); i++)
+	{
+		delete _level[i];
+	}
 }
 
 
 
-//Public methods
 void MainGame::run()
 {
 	_initSystems();
@@ -52,25 +57,23 @@ void MainGame::run()
 
 
 
-//Private methods
 void MainGame::_initSystems()
 {
 	MexEngine::init();
 
-	_window.create("MexEngine", _screenWidth, _screenHeight);
-
+	_window.create("2D_Shooter", _screenWidth, _screenHeight);
 	_initShaders();
 
 	_spriteBatch.init();
 
 	_fpsLimiter.init(_maxFPS);
 
-	_level.loadFile("Levels/default.lvl");
+	_level.push_back(new Level("Levels/default.lvl"));
 
-	glm::vec2 playerPosition = _level.getPlayerPos();
-	_player.init(glm::vec4(playerPosition, 50.0f, 50.0f), 8.0f);
-	_player.setLvlData(_level.getLvlData());
-	_camera.setPosition(playerPosition + 25.0f);
+	glm::vec2 playerPosition = _level[_currLvl]->getPlayerPos();
+	_player.init(glm::vec4(playerPosition, UNIT_WIDTH, UNIT_WIDTH), 8.0f);
+
+	_camera.setPosition(playerPosition + (float)(UNIT_WIDTH / 2));
 
 }
 
@@ -93,7 +96,7 @@ void MainGame::_gameloop() {
 
 		_camera.update();
 
-		_player.updateBullets();
+		_player.updateBullets(_level[_currLvl]->getLevelData());
 
 		_drawGame();
 
@@ -102,7 +105,7 @@ void MainGame::_gameloop() {
 		static int frameCounter = 0;
 		frameCounter++;
 
-		if (frameCounter == 120)
+		if (frameCounter == 60)
 		{
 			std::cout << (int)_fps << " FPS" << std::endl;
 			frameCounter = 0;
@@ -113,9 +116,9 @@ void MainGame::_gameloop() {
 
 void MainGame::_processInput() {
 	SDL_Event evnt;
+	glm::vec2 mouseCoords = _inputManager.getMouseCoords();
+	mouseCoords = _camera.convertScreenToWorld(mouseCoords);
 
-	const float CAMERA_SPEED = 31.5f;
-	const float SCALE_SPEED = 1.05f;
 
 	while (SDL_PollEvent(&evnt))
 	{
@@ -160,34 +163,6 @@ void MainGame::_processInput() {
 	}
 
 
-	if (_inputManager.isKeyPressed(SDLK_w))
-	{
-		_player.move(glm::vec2(0.0f, 1.0f));
-		_camera.setPosition(_player.getPosition() + 25.0f);
-	}
-
-	if (_inputManager.isKeyPressed(SDLK_s))
-	{
-		_player.move(glm::vec2(0.0f, -1.0f));
-		_camera.setPosition(_player.getPosition() + 25.0f);
-	
-	}
-
-	if (_inputManager.isKeyPressed(SDLK_a))
-	{
-		_player.move(glm::vec2(-1.0f, 0.0f));
-		_camera.setPosition(_player.getPosition() + 25.0f);
-
-	}
-
-	if (_inputManager.isKeyPressed(SDLK_d))
-	{
-		_player.move(glm::vec2(1.0f, 0.0f));
-		_camera.setPosition(_player.getPosition() + 25.0f);
-		
-	}
-
-
 
 	if (_inputManager.isKeyPressed(SDLK_UP))
 	{
@@ -224,51 +199,16 @@ void MainGame::_processInput() {
 	}
 
 
-	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT))
+	bool didPlayerMove = _player.processInput
+	(
+		_inputManager,
+		_level[_currLvl]->getLevelData(),
+		mouseCoords
+	);
+
+	if (didPlayerMove == true)
 	{
-		static float LastShotTime;
-	
-
-		if (_time - LastShotTime >= getRandomNumb(0.12f, 0.15f))
-		{
-
-			glm::vec2 mouseCoords = _inputManager.getMouseCoords();
-			mouseCoords = _camera.convertScreenToWorld(mouseCoords);
-
-
-			_player.shoot(mouseCoords);
-
-			LastShotTime = _time;
-
-			//_inputManager.releaseKey(SDL_BUTTON_LEFT);
-		}
-
-
-	}
-
-	if (_inputManager.isKeyPressed(SDL_BUTTON_RIGHT))
-	{
-		static float LastShotTimeR;
-
-
-		if (_time - LastShotTimeR >= getRandomNumb(1.52f, 1.55f))
-		{
-
-			glm::vec2 mouseCoords = _inputManager.getMouseCoords();
-			mouseCoords = _camera.convertScreenToWorld(mouseCoords);
-
-			for (size_t i = 0; i <= 10; i++)
-			{
-				_player.shoot(mouseCoords, 100.0f, 40.0f);
-			}
-			
-
-			LastShotTimeR = _time;
-
-			_inputManager.releaseKey(SDL_BUTTON_RIGHT);
-		}
-
-
+		_camera.setPosition(_player.getPosition() + (float)(UNIT_WIDTH / 2));
 	}
 
 }
@@ -285,11 +225,8 @@ void MainGame::_drawGame() {
 	GLint textureLocation = _colorProgram.getUniformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 
-	//Set the constantly changing time variable
-	//GLint timeLocation = _colorProgram.getUniformLocation("time");
-	//glUniform1f(timeLocation, _time);
 
-	//Set the camera matrix
+
 	GLint pLocation = _colorProgram.getUniformLocation("P");
 	glm::mat4 cameraMatrix = _camera.getCameraMatrix();
 
@@ -297,17 +234,23 @@ void MainGame::_drawGame() {
 
 	_spriteBatch.begin(MexEngine::GlyphSortType::BACK_TO_FRONT);
 
-	_level.draw(_spriteBatch);
+
+
+	_level[_currLvl]->draw();
 
 	_player.draw(_spriteBatch);
 
+
 	_spriteBatch.end();
+
+
 
 	_spriteBatch.renderBatch();
 
-	
+
+
 	glBindTexture(GL_TEXTURE_2D, 0);
-	
+
 	_colorProgram.unuse();
 
 	_window.swapBuffer();

@@ -1,13 +1,17 @@
 #include "Player.h"
 
+#include <SDL\SDL.h>
+
 #include "Utilities.h"
 
-Player::Player() :
-	_posAndSize(0.0f, 0.0f, 50.0f, 50.0f),
-	_position(glm::vec2(_posAndSize.x, _posAndSize.y)),
-	_size(glm::vec2(_posAndSize.w, _posAndSize.z)),
-	_speed(3.0f)
+Player::Player() 
 {
+
+	_color.setColor(128, 50, 100);
+	_position = glm::vec2(0.0f, 0.0f);
+	_size = glm::vec2(UNIT_WIDTH, UNIT_WIDTH);
+	_speed = 3.0f;
+	_depth = 0.0f;
 
 }
 
@@ -19,9 +23,9 @@ Player::~Player()
 void Player::init(glm::vec4 posAndSize, float speed)
 {
 	_position = glm::vec2(posAndSize.x, posAndSize.y);
-	_size = glm::vec2(posAndSize.w, posAndSize.z);
+	_size = glm::vec2(posAndSize.z, posAndSize.w);
 	_speed = speed;
-	_posAndSize = glm::vec4(_position.x, _position.y, _size.x, _size.y);
+	_textureID = MexEngine::ResourceManager::getTexture("Textures/other/PNG/circle.png").id;
 
 
 }
@@ -29,62 +33,126 @@ void Player::init(glm::vec4 posAndSize, float speed)
 void Player::draw(MexEngine::SpriteBatch& spriteBatch)
 {
 
+
 	for (size_t i = 0; i < _bullets.size(); i++)
 	{
 		_bullets[i].draw(spriteBatch);
 	}
 	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
 
-	static MexEngine::GLTexture _texture = MexEngine::ResourceManager::getTexture("Textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
+	glm::vec4 posAndSize = glm::vec4(_position.x, _position.y, _size.x, _size.y);
 
-	MexEngine::Color color;
-
-	color.r = 255;
-	color.g = 255;
-	color.b = 255;
-	color.a = 255;
-
-	spriteBatch.draw(_posAndSize, uv, _texture.id, 0.0f, color);
+	spriteBatch.draw(posAndSize, uv, _textureID, _depth, _color);
 
 
 
 }
 
-void Player::move(glm::vec2 direction)
+bool Player::processInput(	MexEngine::InputManager&		inputManager,
+							const std::vector<std::string>& levelData,
+							glm::vec2&						mouseCoords)
 {
-	glm::vec2 newPosition;
-	newPosition.x = _position.x + (direction.x * _speed);
-	newPosition.y = _position.y + (direction.y * _speed);
+	bool didPlayerMove = false;
 
-	if (_canIMove(newPosition ))
+	if (inputManager.isKeyPressed(SDLK_w))
 	{
-		_position = newPosition;
+		_move(glm::vec2(0.0f, 1.0f), levelData);
+		didPlayerMove = true;
+	}
 
-		_posAndSize = glm::vec4(_position.x, _position.y, _size.x, _size.y);
+	if (inputManager.isKeyPressed(SDLK_s))
+	{
+		_move(glm::vec2(0.0f, -1.0f), levelData);
+		didPlayerMove = true;
+	}
+
+	if (inputManager.isKeyPressed(SDLK_a))
+	{
+		_move(glm::vec2(-1.0f, 0.0f), levelData);
+		didPlayerMove = true;
+	}
+
+	if (inputManager.isKeyPressed(SDLK_d))
+	{
+		_move(glm::vec2(1.0f, 0.0f), levelData);
+		didPlayerMove = true;
 	}
 
 
+	float currTime = (float)SDL_GetTicks() / 1000;
+	if (inputManager.isKeyPressed(SDL_BUTTON_LEFT))
+	{
+		static float LastShotTime;
+
+		if (currTime - LastShotTime >= getRandomNumb(0.12f, 0.15f))
+		{
+
+			shoot(mouseCoords, 5.0f);
+
+			LastShotTime = currTime;
 
 
+		}
 
+
+	}
+
+	if (inputManager.isKeyPressed(SDL_BUTTON_RIGHT))
+	{
+		static float LastShotTimeR;
+
+
+		if (currTime - LastShotTimeR >= getRandomNumb(1.52f, 1.55f))
+		{
+
+
+			for (size_t i = 0; i <= 10; i++)
+			{
+				shoot(mouseCoords, 100.0f, 30.0f);
+			}
+
+
+			LastShotTimeR = currTime;
+
+			inputManager.releaseKey(SDL_BUTTON_RIGHT);
+		}
+
+
+	}
+
+	return didPlayerMove;
 }
 
-void Player::shoot(glm::vec2& mouseCoords, float spreadRange, float speed)
+
+void Player::_move(glm::vec2 direction, const std::vector<std::string>& levelData)
 {
+	glm::vec2 newPosition;
+	_position.x += (direction.x * _speed);
+	_position.y += (direction.y * _speed);
+
+
+	_collideWithLevel(levelData);
+}
+
+void Player::shoot(glm::vec2& mouseCoords, float spreadRange, float speed, float bulletSize)
+{	
+	int bulletLifeTime = 350;
+
 	glm::vec2 spread(getRandomNumb(-spreadRange, spreadRange), getRandomNumb(-spreadRange, spreadRange));
 
-	glm::vec2 direction(mouseCoords - (_position + 20.0f) + spread);
+	glm::vec2 direction(mouseCoords - (_position + (_size / 2.0f - 5.0f)) + spread);
 	direction = glm::normalize(direction);
 
-	_bullets.emplace_back(_posAndSize + 20.0f, direction, speed, 350);
+	_bullets.emplace_back(_position + (_size / 2.0f - (bulletSize / 2.0f)), direction, speed, bulletLifeTime, glm::vec2(bulletSize));
+	
 }
 
 
-void Player::updateBullets()
+void Player::updateBullets(const std::vector<std::string> &levelData)
 {
 	for (size_t i = 0; i < _bullets.size();)
 	{
-		if (_bullets[i].update(_leveldata) == true)
+		if (_bullets[i].update(levelData) == true)
 		{
 			_bullets[i] = _bullets.back();
 			_bullets.pop_back();
@@ -95,31 +163,5 @@ void Player::updateBullets()
 		}
 
 	}
-
-}
-
-
-bool Player::_canIMove(glm::vec2 newPosition)
-{	
-
-	int xTileNumb = ((int)newPosition.x + 9) / 50;
-
-	int yTileNumb = ((int)newPosition.y + 9) / 50;
-
-
-	int yTileNumbU = ((int)newPosition.y + 42) / 50;
-
-	int xTileNumbR = ((int)newPosition.x + 40) / 50;
-
-
-	if (_leveldata[yTileNumb][xTileNumb] == '#' ||
-		_leveldata[yTileNumb][xTileNumbR] == '#' ||
-		_leveldata[yTileNumbU][xTileNumb] == '#' ||
-		_leveldata[yTileNumbU][xTileNumbR] == '#')
-	{
-		return false;
-	}
-
-	return true;
 
 }

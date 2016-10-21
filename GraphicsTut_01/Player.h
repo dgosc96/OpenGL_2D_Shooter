@@ -3,11 +3,13 @@
 #include <glm/glm.hpp>
 #include <MexEngine/SpriteBatch.h>
 #include <MexEngine/ResourceManager.h> 
+#include <MexEngine/InputManager.h>
 
 #include "Bullet.h"
+#include "CONSTANTS.h"
+#include "Unit.h"
 
-
-class Player
+class Player : public Unit
 {
 public:
 	Player();
@@ -17,27 +19,28 @@ public:
 
 	void draw(MexEngine::SpriteBatch& spriteBatch);
 
-	void move(glm::vec2 direction);
-	void shoot(glm::vec2& mouseCoords, float spreadRange = 15.0f, float speed = 25.0f);
+	bool processInput(	MexEngine::InputManager&		inputManager, 
+						const std::vector<std::string>&	levelData,
+						glm::vec2&						mouseCoords);
 
-	void updateBullets();
 
-	glm::vec2 getPosition() { return glm::vec2(_posAndSize.x, _posAndSize.y); }
+	void shoot(	glm::vec2&	mouseCoords,
+				float		spreadRange	= 8.0f,
+				float		speed		= 25.0f,
+				float		bulletSize	= 12.0f);
 
-	void setLvlData(std::vector<std::string>& leveldata) { _leveldata = leveldata; }
+	void updateBullets(const std::vector<std::string> &leveldata);
 
-private:
-	bool					_canIMove (glm::vec2 newPosition);
-	float					_speed;
+	glm::vec2 getPosition() { return _position; }
 
-	glm::vec4				_posAndSize;
-	glm::vec2				_position;
-	glm::vec2				_size;
-	MexEngine::GLTexture	_texture;
+
+
+protected:	
+	void _move(glm::vec2 direction, const std::vector<std::string>& levelData);
+
 
 	std::vector<Bullet>		_bullets;
 
-	std::vector<std::string> _leveldata;
 
 
 	 

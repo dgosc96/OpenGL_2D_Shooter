@@ -10,10 +10,17 @@ namespace MexEngine
 	};
 
 	struct Color {
-		GLubyte r;
-		GLubyte g;
-		GLubyte b;
-		GLubyte a;
+		GLubyte r = 255;
+		GLubyte g = 255;
+		GLubyte b = 255;
+		GLubyte a = 255;
+
+		void setColor(GLubyte R, GLubyte G, GLubyte B, GLubyte A = 255) {
+			r = R;
+			g = G;
+			b = B;
+			a = A;
+		}
 	};
 
 	struct UV {

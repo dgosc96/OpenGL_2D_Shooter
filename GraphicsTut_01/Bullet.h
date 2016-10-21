@@ -4,25 +4,30 @@
 #include <MexEngine/SpriteBatch.h>
 #include <MexEngine/ResourceManager.h> 
 
-class Bullet
+#include "CONSTANTS.h"
+
+#include "Unit.h"
+
+
+class Bullet : public Unit
 {
 public:
-	Bullet(glm::vec2 pos, glm::vec2 dir, float speed, int lifeTime);
+	Bullet(	glm::vec2	pos, 
+			glm::vec2	dir, 
+			float		speed, 
+			int			lifeTime, 
+			glm::vec2	size);
 	~Bullet();
 
-	void draw(MexEngine::SpriteBatch& spriteBatch);
+	bool update(const std::vector<std::string> &leveldata);
 
-	//Returns true when bullet is out of life
-	bool update( static std::vector<std::string> &leveldata);
-
-private:
-	bool _canIMove(glm::vec2 &newPosition, std::vector<std::string> &leveldata);
+protected:
+	bool _canIMove(glm::vec2 &newPosition, const std::vector<std::string> &leveldata);
 
 
 	int			_lifeTime;
-	float		_speed;
 	glm::vec2	_direction;
-	glm::vec2	_position;
+
 
 };
 
