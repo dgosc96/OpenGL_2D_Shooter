@@ -8,10 +8,10 @@
 
 
 
-Level::Level(const std::string &filePath)
+Level::Level(const std::string &filePath, std::vector<Unit*>&  enemies)
 {
 	_spriteBatch.init();
-	loadFile(filePath);
+	loadFile(filePath, enemies);
 	
 
 }
@@ -22,7 +22,7 @@ Level::~Level()
 }
 
 
-void Level::loadFile(const std::string &filePath)
+void Level::loadFile(const std::string &filePath, std::vector<Unit*>& enemies)
 {
 	GLint wallTexture = MexEngine::ResourceManager::getTexture("Textures/other/PNG/wall.png").id;
 	GLint floorTexture = MexEngine::ResourceManager::getTexture("Textures/other/PNG/floor.png").id;
@@ -48,7 +48,6 @@ void Level::loadFile(const std::string &filePath)
 	while (std::getline(LevelFile, line))
 	{
 
-
 		for (size_t x = 0; x < line.size(); x++)
 		{
 
@@ -61,16 +60,21 @@ void Level::loadFile(const std::string &filePath)
 				_spriteBatch.draw(destRect, uvRect, wallTexture, 0.0f, color);
 
 				break;
-			case ' ':
+			case '.':
 				_spriteBatch.draw(destRect, uvRect, floorTexture, 0.0f, color);
 
 				break;
 			case '@':
 				_setPlayerPos(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH));
 
-				line[x] = ' ';
+				line[x] = '.';
 				_spriteBatch.draw(destRect, uvRect, floorTexture, 0.0f, color);
 				break;
+			case 'Z':
+				enemies.push_back(new Zombie(glm::vec4(x * TILE_WIDTH, y * TILE_WIDTH, UNIT_WIDTH, UNIT_WIDTH)));
+
+				line[x] = '.';
+				_spriteBatch.draw(destRect, uvRect, floorTexture, 0.0f, color);
 			default:
 				break;
 			}

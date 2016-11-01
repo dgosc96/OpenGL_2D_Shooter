@@ -40,9 +40,20 @@ MainGame::MainGame() :
 
 MainGame::~MainGame()
 {
+	
+
 	for (size_t i = 0; i < _level.size(); i++)
 	{
 		delete _level[i];
+	}
+
+	for (size_t i = 0; i < _enemies.size(); i++)
+	{
+		delete _enemies[i];
+	}
+	for (size_t i = 0; i < _humans.size(); i++)
+	{
+		delete _humans[i];
 	}
 }
 
@@ -68,12 +79,16 @@ void MainGame::_initSystems()
 
 	_fpsLimiter.init(_maxFPS);
 
-	_level.push_back(new Level("Levels/default.lvl"));
+	_level.push_back(new Level("Levels/default.lvl", _enemies));
 
 	glm::vec2 playerPosition = _level[_currLvl]->getPlayerPos();
-	_player.init(glm::vec4(playerPosition, UNIT_WIDTH, UNIT_WIDTH), 8.0f);
+	_player = new Player(glm::vec4(playerPosition, UNIT_WIDTH, UNIT_WIDTH));
+
+	_humans.push_back(_player);
 
 	_camera.setPosition(playerPosition + (float)(UNIT_WIDTH / 2));
+
+	_spawnHumans();
 
 }
 
@@ -94,9 +109,11 @@ void MainGame::_gameloop() {
 
 		_time = (float)SDL_GetTicks() / 1000;
 
-		_camera.update();
+		_player->updateBullets(_level[_currLvl]->getLevelData());
 
-		_player.updateBullets(_level[_currLvl]->getLevelData());
+		_updateUnits();
+
+		_camera.update();
 
 		_drawGame();
 
@@ -199,7 +216,7 @@ void MainGame::_processInput() {
 	}
 
 
-	bool didPlayerMove = _player.processInput
+	bool didPlayerMove = _player->processInput
 	(
 		_inputManager,
 		_level[_currLvl]->getLevelData(),
@@ -208,7 +225,7 @@ void MainGame::_processInput() {
 
 	if (didPlayerMove == true)
 	{
-		_camera.setPosition(_player.getPosition() + (float)(UNIT_WIDTH / 2));
+		_camera.setPosition(_player->getPosition() + (float)(UNIT_WIDTH / 2));
 	}
 
 }
@@ -238,7 +255,7 @@ void MainGame::_drawGame() {
 
 	_level[_currLvl]->draw();
 
-	_player.draw(_spriteBatch);
+	_drawUnits();
 
 
 	_spriteBatch.end();
@@ -256,3 +273,58 @@ void MainGame::_drawGame() {
 	_window.swapBuffer();
 }
 
+void MainGame::_drawUnits()
+{
+	for (size_t i = 0; i < _enemies.size(); i++)
+	{
+		_enemies[i]->draw(_spriteBatch);
+	}
+	for (size_t j = 0; j < _humans.size(); j++)
+	{
+		_humans[j]->draw(_spriteBatch);
+	}
+
+}
+
+void MainGame::_updateUnits()
+{
+	for (size_t i = 0; i < _enemies.size(); i++)
+	{
+		_enemies[i]->collideWithUnits(_enemies, _humans);
+		_enemies[i]->collideWithLevel(_level[_currLvl]->getLevelData());
+
+	}
+	for (size_t j = 0; j < _humans.size(); j++)
+	{
+		_humans[j]->collideWithUnits(_enemies, _humans);
+		_humans[j]->collideWithLevel(_level[_currLvl]->getLevelData());
+	}
+
+
+
+
+}
+
+void MainGame::_spawnHumans()
+{
+	const std::vector<std::string> leveldata = _level[_currLvl]->getLevelData();
+
+	for (size_t i = 0; i < 50;)
+	{
+		int x = getRandomNumb(1, leveldata[0].size() - 2);
+		int y = getRandomNumb(1, leveldata.size() - 2);
+
+		if (leveldata[y][x] == '.')
+		{
+
+			glm::vec4 posAndSize((float)x * TILE_WIDTH, (float)y * TILE_WIDTH, UNIT_WIDTH, UNIT_WIDTH);
+			_humans.push_back(new Human(posAndSize));
+
+			i++;
+		}
+	}
+
+
+
+
+}

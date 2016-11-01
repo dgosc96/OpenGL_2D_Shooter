@@ -15,11 +15,11 @@ namespace MexEngine
 		file.seekg(0, std::ios::end);
 
 
-		int fileSize = file.tellg();
+		int fileSize = (int)file.tellg();
 		file.seekg(0, std::ios::beg);
 
 	
-		fileSize -= file.tellg();
+		fileSize -= (int)file.tellg();
 
 		buffer.resize(fileSize);
 		file.read((char *)&(buffer[0]), fileSize);

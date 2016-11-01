@@ -7,12 +7,12 @@
 
 #include "Bullet.h"
 #include "CONSTANTS.h"
-#include "Unit.h"
+#include "Human.h"
 
-class Player : public Unit
+class Player : public Human
 {
 public:
-	Player();
+	Player(glm::vec4 posAndSize, float speed = 8.0f);
 	~Player();
 
 	void init(glm::vec4 posAndSize, float speed);
@@ -23,6 +23,7 @@ public:
 						const std::vector<std::string>&	levelData,
 						glm::vec2&						mouseCoords);
 
+	void move(glm::vec2 direction, const std::vector<std::string>& levelData);
 
 	void shoot(	glm::vec2&	mouseCoords,
 				float		spreadRange	= 8.0f,
@@ -31,12 +32,12 @@ public:
 
 	void updateBullets(const std::vector<std::string> &leveldata);
 
-	glm::vec2 getPosition() { return _position; }
+	
 
 
 
 protected:	
-	void _move(glm::vec2 direction, const std::vector<std::string>& levelData);
+
 
 
 	std::vector<Bullet>		_bullets;

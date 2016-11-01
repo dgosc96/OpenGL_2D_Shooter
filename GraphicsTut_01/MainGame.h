@@ -17,8 +17,10 @@
 #include <MexEngine/SpriteBatch.h>
 
 
-#include "Bullet.h"
 #include "Player.h"
+#include "Enemy.h"
+
+
 #include "Level.h"
 
 
@@ -40,6 +42,11 @@ private:
 	void _gameloop();
 	void _processInput();
 	void _drawGame();
+
+	void _drawUnits();
+	void _updateUnits();
+
+	void _spawnHumans();
 
 
 
@@ -64,7 +71,11 @@ private:
 
 
 
-	Player				_player;
+	Player*				_player;
+	std::vector<Unit*> _enemies;
+	std::vector<Unit*> _humans;
+
+
 	int					_currLvl;
 	std::vector<Level*>	_level;
 

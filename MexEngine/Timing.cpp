@@ -34,7 +34,7 @@ namespace MexEngine
 
 		if (1000.0f / _maxFPS > frameTicks && _maxFPS != 0.0f)
 		{
-			SDL_Delay(1000.0f / _maxFPS - frameTicks);
+			SDL_Delay(1000 / _maxFPS - frameTicks);
 		}
 
 		return _fps;

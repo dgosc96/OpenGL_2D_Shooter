@@ -9,14 +9,17 @@
 
 #include "CONSTANTS.h"
 
+#include "Enemy.h"
+#include "Zombie.h"
+
 
 class Level
 {
 public:
-	Level(const std::string &filePath);
+	Level(const std::string &filePath, std::vector<Unit*>& enemies);
 	~Level();
 
-	void loadFile(const std::string &filePath);
+	void loadFile(const std::string &filePath, std::vector<Unit*>& enemies);
 
 	void draw();
 
@@ -29,7 +32,7 @@ public:
 private:
 	std::vector<std::string>	_levelData;
 
-	MexEngine::SpriteBatch _spriteBatch;
+	MexEngine::SpriteBatch		_spriteBatch;
 
 	glm::vec2					_playerPos;
 

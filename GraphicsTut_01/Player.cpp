@@ -4,16 +4,18 @@
 
 #include "Utilities.h"
 
-Player::Player() 
+Player::Player(glm::vec4 posAndSize, float speed)
 {
 
 	_color.setColor(128, 50, 100);
-	_position = glm::vec2(0.0f, 0.0f);
-	_size = glm::vec2(UNIT_WIDTH, UNIT_WIDTH);
-	_speed = 3.0f;
+	_position = glm::vec2(posAndSize.x, posAndSize.y);
+	_size = glm::vec2(posAndSize.z, posAndSize.w);
+	_speed = speed;
 	_depth = 0.0f;
+	_textureID = MexEngine::ResourceManager::getTexture("Textures/other/PNG/circle.png").id;
 
 }
+
 
 Player::~Player()
 {
@@ -56,25 +58,25 @@ bool Player::processInput(	MexEngine::InputManager&		inputManager,
 
 	if (inputManager.isKeyPressed(SDLK_w))
 	{
-		_move(glm::vec2(0.0f, 1.0f), levelData);
+		move(glm::vec2(0.0f, 1.0f), levelData);
 		didPlayerMove = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_s))
 	{
-		_move(glm::vec2(0.0f, -1.0f), levelData);
+		move(glm::vec2(0.0f, -1.0f), levelData);
 		didPlayerMove = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_a))
 	{
-		_move(glm::vec2(-1.0f, 0.0f), levelData);
+		move(glm::vec2(-1.0f, 0.0f), levelData);
 		didPlayerMove = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_d))
 	{
-		_move(glm::vec2(1.0f, 0.0f), levelData);
+		move(glm::vec2(1.0f, 0.0f), levelData);
 		didPlayerMove = true;
 	}
 
@@ -124,14 +126,12 @@ bool Player::processInput(	MexEngine::InputManager&		inputManager,
 }
 
 
-void Player::_move(glm::vec2 direction, const std::vector<std::string>& levelData)
+void Player::move(glm::vec2 direction, const std::vector<std::string>& levelData)
 {
 	glm::vec2 newPosition;
 	_position.x += (direction.x * _speed);
 	_position.y += (direction.y * _speed);
 
-
-	_collideWithLevel(levelData);
 }
 
 void Player::shoot(glm::vec2& mouseCoords, float spreadRange, float speed, float bulletSize)

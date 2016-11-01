@@ -1,6 +1,5 @@
 #pragma once
 #include <MexEngine/SpriteBatch.h>
-
 class CollidingTile
 {
 public:
@@ -22,13 +21,25 @@ public:
 	Unit();
 	virtual ~Unit();
 
+	glm::vec2	getPosition()					{ return _position; }
+	void		setPosition(glm::vec2 position) { _position = position; }
+
 	virtual void move() {}
 
-	virtual void draw(MexEngine::SpriteBatch& spriteBatch);
+	virtual bool		CollideWithUnit	(Unit* unit);
+	virtual void		collideWithUnits(	std::vector<Unit*>& enemies,
+											std::vector<Unit*>& humans);
+
+	virtual void		collideWithLevel(const std::vector<std::string> &levelData);
+
+	virtual void		draw(MexEngine::SpriteBatch& spriteBatch);
+
+
 
 protected:
 
-	virtual void		_collideWithLevel	(const std::vector<std::string> &levelData);
+
+
 
 	virtual void		_checkTilePos	(const std::vector<std::string> &levelData,
 										std::vector<CollidingTile> &collidingTiles,

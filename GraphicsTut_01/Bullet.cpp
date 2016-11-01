@@ -41,9 +41,9 @@ bool Bullet::update(const std::vector<std::string> &leveldata)
 
 bool Bullet::_canIMove(glm::vec2 &newPosition, const std::vector<std::string> &leveldata)
 {
-	int xTileNumb = (int)newPosition.x / TILE_WIDTH;
+	int xTileNumb = (int)(newPosition.x / TILE_WIDTH);
 
-	int yTileNumb = (int)newPosition.y / TILE_WIDTH;
+	int yTileNumb = (int)(newPosition.y / TILE_WIDTH);
 
 	if (leveldata[yTileNumb][xTileNumb] == '#')
 	{

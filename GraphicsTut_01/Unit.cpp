@@ -1,4 +1,6 @@
 #include "Unit.h"
+
+
 #include "CONSTANTS.h"
 
 #include <MexEngine/ResourceManager.h>
@@ -30,7 +32,55 @@ void Unit::draw(MexEngine::SpriteBatch& spriteBatch)
 
 }
 
-void Unit::_collideWithLevel(const std::vector<std::string> &leveldata)
+
+bool Unit::CollideWithUnit(Unit* target)
+{
+	static const float* MIN_DISTANCE = &UNIT_WIDTH;
+
+	glm::vec2 centerPosA = _position + UNIT_RADIUS;
+	glm::vec2 centerPosB = target->_position + UNIT_RADIUS;
+
+	glm::vec2 distVec = centerPosA - centerPosB;
+
+	float distance = glm::length(distVec);
+
+	float collisionDepth = *MIN_DISTANCE - distance;
+
+	if (collisionDepth > 0)
+	{
+		glm::vec2 collisionDepthVec = glm::normalize(distVec) * collisionDepth;
+
+		_position += collisionDepthVec / 2.0f;
+		target->_position -= collisionDepthVec / 2.0f;
+
+		return true;
+	}
+
+	return false;
+}
+
+void Unit::collideWithUnits(std::vector<Unit*>& enemies,
+	std::vector<Unit*>& humans)
+{
+	for (size_t i = 0; i < enemies.size(); i++)
+	{
+		if (this != enemies[i] && enemies[i] != nullptr)
+		{
+			CollideWithUnit(enemies[i]);
+		}
+	}
+
+	for (size_t j = 0; j < humans.size(); j++)
+	{
+		if (this != humans[j])
+		{
+			CollideWithUnit(humans[j]);
+		}
+	}
+}
+
+
+void Unit::collideWithLevel(const std::vector<std::string> &leveldata)
 {
 	std::vector<CollidingTile> collidingTiles;
 
@@ -76,7 +126,7 @@ void Unit::_checkTilePos(const std::vector<std::string> &levelData,
 	glm::vec2 cornerPos = glm::vec2(floor(x / TILE_WIDTH),
 									floor(y / TILE_WIDTH));
 
-	if (levelData[cornerPos.y][cornerPos.x] != ' ')
+	if (levelData[cornerPos.y][cornerPos.x] != '.')
 	{
 
 		glm::vec2 collidingTilePos = (cornerPos * TILE_WIDTH) + (TILE_WIDTH / 2.0f);
@@ -84,7 +134,7 @@ void Unit::_checkTilePos(const std::vector<std::string> &levelData,
 		glm::vec2 centerPlayerPos = _position + glm::vec2(UNIT_RADIUS);
 
 		glm::vec2 distVec = centerPlayerPos - collidingTilePos;
-		float distToPlayer = sqrt((distVec.x * distVec.x) + (distVec.y * distVec.y));
+		float distToPlayer = glm::length(distVec);
 
 
 		collidingTiles.emplace_back(collidingTilePos, distToPlayer);
