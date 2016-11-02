@@ -22,15 +22,19 @@ public:
 	virtual ~Unit();
 
 	glm::vec2	getPosition()					{ return _position; }
+	glm::vec2	getSize()						{ return _size; }
+
 	void		setPosition(glm::vec2 position) { _position = position; }
 
+	virtual void update() {}
+	
 	virtual void move() {}
 
-	virtual bool		CollideWithUnit	(Unit* unit);
-	virtual void		collideWithUnits(	std::vector<Unit*>& enemies,
-											std::vector<Unit*>& humans);
+	virtual bool		CollideWithUnit		(Unit* unit);
+	virtual bool		collideWithUnits	(std::vector<Unit*>& enemies,
+											 std::vector<Unit*>& humans);
 
-	virtual void		collideWithLevel(const std::vector<std::string> &levelData);
+	virtual bool		collideWithLevel(const std::vector<std::string> &levelData);
 
 	virtual void		draw(MexEngine::SpriteBatch& spriteBatch);
 

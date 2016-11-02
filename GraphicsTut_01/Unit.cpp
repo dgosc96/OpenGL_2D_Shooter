@@ -35,16 +35,20 @@ void Unit::draw(MexEngine::SpriteBatch& spriteBatch)
 
 bool Unit::CollideWithUnit(Unit* target)
 {
-	static const float* MIN_DISTANCE = &UNIT_WIDTH;
+	const float UNIT_RADIUS = _size.x / 2.0f;
+	const float TARGET_UNIT_RADIUS = target->getSize().x / 2.0f;
+	const float MIN_DISTANCE = UNIT_RADIUS + TARGET_UNIT_RADIUS;
+	
+
 
 	glm::vec2 centerPosA = _position + UNIT_RADIUS;
-	glm::vec2 centerPosB = target->_position + UNIT_RADIUS;
+	glm::vec2 centerPosB = target->_position + TARGET_UNIT_RADIUS;
 
 	glm::vec2 distVec = centerPosA - centerPosB;
 
 	float distance = glm::length(distVec);
 
-	float collisionDepth = *MIN_DISTANCE - distance;
+	float collisionDepth = MIN_DISTANCE - distance;
 
 	if (collisionDepth > 0)
 	{
@@ -59,28 +63,33 @@ bool Unit::CollideWithUnit(Unit* target)
 	return false;
 }
 
-void Unit::collideWithUnits(std::vector<Unit*>& enemies,
+bool Unit::collideWithUnits(std::vector<Unit*>& enemies,
 	std::vector<Unit*>& humans)
 {
+	bool didCollide = false;
+
 	for (size_t i = 0; i < enemies.size(); i++)
 	{
 		if (this != enemies[i] && enemies[i] != nullptr)
 		{
-			CollideWithUnit(enemies[i]);
+			if (CollideWithUnit(enemies[i]))
+				didCollide = true;
 		}
 	}
 
-	for (size_t j = 0; j < humans.size(); j++)
+	for (size_t j = 1; j < humans.size(); j++)
 	{
 		if (this != humans[j])
 		{
-			CollideWithUnit(humans[j]);
+			if (CollideWithUnit(humans[j]))
+				didCollide = true;
 		}
 	}
+	return didCollide;
 }
 
 
-void Unit::collideWithLevel(const std::vector<std::string> &leveldata)
+bool Unit::collideWithLevel(const std::vector<std::string> &leveldata)
 {
 	std::vector<CollidingTile> collidingTiles;
 
@@ -91,18 +100,18 @@ void Unit::collideWithLevel(const std::vector<std::string> &leveldata)
 
 	_checkTilePos(leveldata,
 		collidingTiles,
-		_position.x + UNIT_WIDTH,
+		_position.x + _size.x,
 		_position.y);
 
 	_checkTilePos(leveldata,
 		collidingTiles,
 		_position.x,
-		_position.y + UNIT_WIDTH);
+		_position.y + _size.y);
 
 	_checkTilePos(leveldata,
 		collidingTiles,
-		_position.x + UNIT_WIDTH,
-		_position.y + UNIT_WIDTH);
+		_position.x + _size.x,
+		_position.y + _size.y);
 
 
 	if (collidingTiles.size() > 0)
@@ -113,8 +122,9 @@ void Unit::collideWithLevel(const std::vector<std::string> &leveldata)
 		{
 			_collideWithTile(collidingTiles[i].pos);
 		}
+		return true;
 	}
-
+	return false;
 
 }
 
@@ -123,6 +133,8 @@ void Unit::_checkTilePos(const std::vector<std::string> &levelData,
 	std::vector<CollidingTile> &collidingTiles,
 	float x, float y)
 {
+	const float UNIT_RADIUS = _size.x / 2.0f;
+
 	glm::vec2 cornerPos = glm::vec2(floor(x / TILE_WIDTH),
 									floor(y / TILE_WIDTH));
 
@@ -145,6 +157,7 @@ void Unit::_checkTilePos(const std::vector<std::string> &levelData,
 
 void Unit::_collideWithTile(glm::vec2 tilePos)
 {
+	const float UNIT_RADIUS = _size.x / 2.0f;
 	const float	MIN_DISTANCE = UNIT_RADIUS + TILE_RADIUS;
 
 	glm::vec2 centerPlayerPos = _position + glm::vec2(UNIT_RADIUS);

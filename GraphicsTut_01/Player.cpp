@@ -86,7 +86,7 @@ bool Player::processInput(	MexEngine::InputManager&		inputManager,
 	{
 		static float LastShotTime;
 
-		if (currTime - LastShotTime >= getRandomNumb(0.12f, 0.15f))
+		if (currTime - LastShotTime >= getRandomNumb(0.0f, 0.05f))
 		{
 
 			shoot(mouseCoords, 5.0f);
@@ -148,11 +148,13 @@ void Player::shoot(glm::vec2& mouseCoords, float spreadRange, float speed, float
 }
 
 
-void Player::updateBullets(const std::vector<std::string> &levelData)
+void Player::updateBullets(const std::vector<std::string> &levelData, 
+								 std::vector<Unit*>& enemies,
+								 std::vector<Unit*>& humans)
 {
 	for (size_t i = 0; i < _bullets.size();)
 	{
-		if (_bullets[i].update(levelData) == true)
+		if (_bullets[i].update(levelData, enemies, humans) == true)
 		{
 			_bullets[i] = _bullets.back();
 			_bullets.pop_back();

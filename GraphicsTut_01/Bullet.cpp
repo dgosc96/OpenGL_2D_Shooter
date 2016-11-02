@@ -22,12 +22,12 @@ Bullet::~Bullet()
 
 
 
-bool Bullet::update(const std::vector<std::string> &leveldata)
+bool Bullet::update(const std::vector<std::string> &leveldata, std::vector<Unit*>& enemies, std::vector<Unit*>& humans)
 {
 	glm::vec2 newPos = _position + (_direction * _speed);
 	_lifeTime--;
 
-	if (_lifeTime == 0 || _canIMove(newPos, leveldata) == false)
+	if (_lifeTime == 0 || _canIMove(newPos, leveldata) == false || collideWithUnits(enemies, humans))
 	{
 		return true;
 	}

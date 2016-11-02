@@ -46,7 +46,7 @@ private:
 	void _drawUnits();
 	void _updateUnits();
 
-	void _spawnHumans();
+	void _spawnHumans(const std::vector<std::string>& leveldata);
 
 
 

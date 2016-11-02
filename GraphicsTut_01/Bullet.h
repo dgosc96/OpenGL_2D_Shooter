@@ -19,7 +19,9 @@ public:
 			glm::vec2	size);
 	~Bullet();
 
-	bool update(const std::vector<std::string> &leveldata);
+	bool update(const std::vector<std::string> &leveldata, 
+					  std::vector<Unit*>& enemies,
+					  std::vector<Unit*>& humans);
 
 protected:
 	bool _canIMove(glm::vec2 &newPosition, const std::vector<std::string> &leveldata);

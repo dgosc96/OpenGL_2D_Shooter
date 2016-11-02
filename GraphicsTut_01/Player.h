@@ -12,7 +12,7 @@
 class Player : public Human
 {
 public:
-	Player(glm::vec4 posAndSize, float speed = 8.0f);
+	Player(glm::vec4 posAndSize, float speed = 10.0f);
 	~Player();
 
 	void init(glm::vec4 posAndSize, float speed);
@@ -22,7 +22,7 @@ public:
 	bool processInput(	MexEngine::InputManager&		inputManager, 
 						const std::vector<std::string>&	levelData,
 						glm::vec2&						mouseCoords);
-
+	void move(){}
 	void move(glm::vec2 direction, const std::vector<std::string>& levelData);
 
 	void shoot(	glm::vec2&	mouseCoords,
@@ -30,7 +30,8 @@ public:
 				float		speed		= 25.0f,
 				float		bulletSize	= 12.0f);
 
-	void updateBullets(const std::vector<std::string> &leveldata);
+	void updateBullets(const  std::vector<std::string> &leveldata,										std::vector<Unit*>& enemies,
+							  std::vector<Unit*>& humans);
 
 	
 
