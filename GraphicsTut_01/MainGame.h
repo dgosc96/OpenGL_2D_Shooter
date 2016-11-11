@@ -20,6 +20,8 @@
 #include "Player.h"
 #include "Enemy.h"
 
+#include "Crosshair.h"
+
 
 #include "Level.h"
 
@@ -52,6 +54,7 @@ private:
 
 	MexEngine::Window _window;
 	
+	Crosshair* _crosshair;
 
 
 	int _screenWidth;

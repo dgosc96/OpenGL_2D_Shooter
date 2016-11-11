@@ -110,5 +110,8 @@
     <ClInclude Include="Timing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DEBUG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

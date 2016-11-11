@@ -2,6 +2,7 @@
 
 #include "Errors.h"
 
+#include "DEBUG.h"
 
 namespace MexEngine
 {
@@ -90,6 +91,9 @@ namespace MexEngine
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
+#if DEBUG
+		SDL_ShowCursor(SDL_DISABLE);
+#endif 
 
 		return 0;
 	}

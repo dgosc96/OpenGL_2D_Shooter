@@ -33,7 +33,7 @@ MainGame::MainGame() :
 
 #endif
 
-
+	
 
 	_camera.init(_screenWidth, _screenHeight);
 }
@@ -90,6 +90,8 @@ void MainGame::_initSystems()
 
 	_spawnHumans(_level[_currLvl]->getLevelData(), 100);
 
+	_crosshair = new Crosshair(glm::vec2(30.0f), 1.0f, 200.0f, "Textures/other/PNG/circle.png");
+
 }
 
 void MainGame::_initShaders() {
@@ -113,8 +115,12 @@ void MainGame::_gameloop() {
 		
 		_player->updateBullets(_level[_currLvl]->getLevelData(), _enemies, _humans);
 
+		
+
 		_camera.setPosition(_player->getPosition() + _player->getSize() / 2.0f);
 		_camera.update();
+
+		_crosshair->update(_camera.convertScreenToWorld(_inputManager.getMouseCoords()), _player->getPosition());
 
 		_drawGame();
 
@@ -223,7 +229,7 @@ void MainGame::_processInput() {
 	(
 		_inputManager,
 		_level[_currLvl]->getLevelData(),
-		mouseCoords
+		_crosshair->getCenterPosition()
 	);
 
 
@@ -251,11 +257,12 @@ void MainGame::_drawGame() {
 	_spriteBatch.begin(MexEngine::GlyphSortType::BACK_TO_FRONT);
 
 
-
+	_crosshair->draw(_spriteBatch);
 	_level[_currLvl]->draw();
 
 	_drawUnits();
 
+	
 
 	_spriteBatch.end();
 
