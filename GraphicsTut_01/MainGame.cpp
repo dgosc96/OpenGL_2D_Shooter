@@ -90,7 +90,7 @@ void MainGame::_initSystems()
 
 	_spawnHumans(_level[_currLvl]->getLevelData(), 100);
 
-	_crosshair = new Crosshair(glm::vec2(30.0f), 1.0f, 200.0f, "Textures/other/PNG/circle.png");
+	_crosshair = new Crosshair(glm::vec2(30.0f), -1.0f, 200.0f, "Textures/other/PNG/circle.png");
 
 }
 

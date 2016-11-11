@@ -86,7 +86,7 @@ bool Player::processInput(	MexEngine::InputManager&		inputManager,
 
 			for (size_t i = 0; i <= 10; i++)
 			{
-				shoot(mouseCoords, 100.0f, 30.0f);
+				shoot(mouseCoords, 30.0f, 30.0f);
 			}
 
 
