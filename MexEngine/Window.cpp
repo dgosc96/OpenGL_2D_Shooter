@@ -92,6 +92,7 @@ namespace MexEngine
 
 
 #if DEBUG
+#else
 		SDL_ShowCursor(SDL_DISABLE);
 #endif 
 
