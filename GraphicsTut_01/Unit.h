@@ -28,11 +28,16 @@ public:
 
 	virtual void update() {}
 	
+	virtual void move(std::vector<Unit*>& enemies) {}
 	virtual void move() {}
 
-	virtual bool		CollideWithUnit		(Unit* unit);
+	virtual void attack(Unit* target){}
+
+	virtual bool		CollideWithUnit		(Unit* unit, const std::vector<std::string> &levelData);
+
 	virtual bool		collideWithUnits	(std::vector<Unit*>& enemies,
-											 std::vector<Unit*>& humans);
+											 std::vector<Unit*>& humans,
+								const std::vector<std::string> &levelData);
 
 	virtual bool		collideWithLevel(const std::vector<std::string> &levelData);
 
@@ -42,7 +47,7 @@ public:
 
 protected:
 
-
+	glm::vec2			_getDistanceVec(Unit* target);
 
 
 	virtual void		_checkTilePos	(const std::vector<std::string> &levelData,
@@ -59,6 +64,12 @@ protected:
 											int a,
 											int b);
 
+
+
+
+	int _health, _damage;
+
+
 	float				_speed;
 	float				_depth;
 
@@ -68,5 +79,10 @@ protected:
 	GLint				_textureID;
 
 	MexEngine::Color	_color;
+
+	glm::vec2 _direction;
+	float	  _dirChangingTime;
+
+	float				_radius;
 };
 

@@ -9,10 +9,8 @@ public:
 	~Human();
 	
 
-	virtual void move();
+	virtual void move(std::vector<Unit*>& enemies);
 
-private:
-	glm::vec2 _direction;
-	float	  _dirChangingTime;
+
 };
 

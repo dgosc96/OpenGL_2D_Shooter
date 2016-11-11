@@ -88,7 +88,7 @@ void MainGame::_initSystems()
 
 	_camera.setPosition(playerPosition + (float)(UNIT_WIDTH / 2));
 
-	_spawnHumans(_level[_currLvl]->getLevelData());
+	_spawnHumans(_level[_currLvl]->getLevelData(), 100);
 
 }
 
@@ -109,14 +109,16 @@ void MainGame::_gameloop() {
 
 		_time = (float)SDL_GetTicks() / 1000;
 
-		_player->updateBullets(_level[_currLvl]->getLevelData(), _enemies, _humans);
-
 		_updateUnits();
+		
+		_player->updateBullets(_level[_currLvl]->getLevelData(), _enemies, _humans);
 
 		_camera.setPosition(_player->getPosition() + _player->getSize() / 2.0f);
 		_camera.update();
 
 		_drawGame();
+
+
 
 		_fps = _fpsLimiter.end();
 
@@ -224,10 +226,6 @@ void MainGame::_processInput() {
 		mouseCoords
 	);
 
-	//if (didPlayerMove == true)
-	//{
-
-	//}
 
 }
 
@@ -289,36 +287,49 @@ void MainGame::_drawUnits()
 
 void MainGame::_updateUnits()
 {
+
+	for (size_t j = 0; j < _humans.size(); j++)
+	{
+		_humans[j]->move(_enemies);
+		_humans[j]->collideWithUnits(_enemies, _humans, _level[_currLvl]->getLevelData());
+	}
 	for (size_t i = 0; i < _enemies.size(); i++)
 	{
-		_enemies[i]->collideWithUnits(_enemies, _humans);
+		_enemies[i]->move(_humans);
+		_enemies[i]->collideWithUnits(_enemies, _humans, _level[_currLvl]->getLevelData());
+
+	}
+
+	for (size_t j = 0; j < _humans.size(); j++)
+	{
+		_humans[j]->collideWithLevel(_level[_currLvl]->getLevelData());
+	}
+	for (size_t i = 0; i < _enemies.size(); i++)
+	{
+
 		_enemies[i]->collideWithLevel(_level[_currLvl]->getLevelData());
 
 	}
-	for (size_t j = 0; j < _humans.size(); j++)
-	{
-		_humans[j]->move();
-		_humans[j]->collideWithUnits(_enemies, _humans);
-		_humans[j]->collideWithLevel(_level[_currLvl]->getLevelData());
-	}
-
 
 
 
 }
 
-void MainGame::_spawnHumans(const std::vector<std::string>& leveldata)
+void MainGame::_spawnHumans(const std::vector<std::string>& leveldata, size_t amount)
 {
 	
-	for (size_t i = 0; i < 250;)
+	for (size_t i = 0; i < amount;)
 	{
-		int x = getRandomNumb(1, leveldata[0].size() - 2);
-		int y = getRandomNumb(1, leveldata.size() - 2);
+		float x = getRandomNumb(1.0f, (leveldata[0].size() - 2) * TILE_WIDTH);
+		float y = getRandomNumb(1.0f, (leveldata.size() - 2) * TILE_WIDTH);
 
-		if (leveldata[y][x] == '.')
+		int tileX = (int)(x / TILE_WIDTH);
+		int tileY = (int)(y / TILE_WIDTH);
+
+		if (leveldata[tileY][tileX] == '.')
 		{
 
-			glm::vec4 posAndSize((float)x * TILE_WIDTH, (float)y * TILE_WIDTH, UNIT_WIDTH, UNIT_WIDTH);
+			glm::vec4 posAndSize(x, y, UNIT_WIDTH, UNIT_WIDTH);
 			_humans.push_back(new Human(posAndSize));
 
 			i++;

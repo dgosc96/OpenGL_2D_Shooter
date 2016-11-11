@@ -22,15 +22,15 @@ public:
 	bool processInput(	MexEngine::InputManager&		inputManager, 
 						const std::vector<std::string>&	levelData,
 						glm::vec2&						mouseCoords);
-	void move(){}
+	void move(std::vector<Unit*>& enemies){}
 	void move(glm::vec2 direction, const std::vector<std::string>& levelData);
 
 	void shoot(	glm::vec2&	mouseCoords,
 				float		spreadRange	= 8.0f,
-				float		speed		= 25.0f,
+				float		speed		= 55.0f,
 				float		bulletSize	= 12.0f);
 
-	void updateBullets(const  std::vector<std::string> &leveldata,										std::vector<Unit*>& enemies,
+	void updateBullets(const  std::vector<std::string> &leveldata,									std::vector<Unit*>& enemies,
 							  std::vector<Unit*>& humans);
 
 	

@@ -10,6 +10,7 @@ Player::Player(glm::vec4 posAndSize, float speed)
 	_color.setColor(128, 50, 100);
 	_position = glm::vec2(posAndSize.x, posAndSize.y);
 	_size = glm::vec2(posAndSize.z, posAndSize.w);
+	_radius = _size.x / 2.0f;
 	_speed = speed;
 	_depth = 0.0f;
 	_textureID = MexEngine::ResourceManager::getTexture("Textures/other/PNG/circle.png").id;
@@ -56,31 +57,6 @@ bool Player::processInput(	MexEngine::InputManager&		inputManager,
 {
 	bool didPlayerMove = false;
 
-	if (inputManager.isKeyPressed(SDLK_w))
-	{
-		move(glm::vec2(0.0f, 1.0f), levelData);
-		didPlayerMove = true;
-	}
-
-	if (inputManager.isKeyPressed(SDLK_s))
-	{
-		move(glm::vec2(0.0f, -1.0f), levelData);
-		didPlayerMove = true;
-	}
-
-	if (inputManager.isKeyPressed(SDLK_a))
-	{
-		move(glm::vec2(-1.0f, 0.0f), levelData);
-		didPlayerMove = true;
-	}
-
-	if (inputManager.isKeyPressed(SDLK_d))
-	{
-		move(glm::vec2(1.0f, 0.0f), levelData);
-		didPlayerMove = true;
-	}
-
-
 	float currTime = (float)SDL_GetTicks() / 1000;
 	if (inputManager.isKeyPressed(SDL_BUTTON_LEFT))
 	{
@@ -121,6 +97,34 @@ bool Player::processInput(	MexEngine::InputManager&		inputManager,
 
 
 	}
+
+
+	if (inputManager.isKeyPressed(SDLK_w))
+	{
+		move(glm::vec2(0.0f, 1.0f), levelData);
+		didPlayerMove = true;
+	}
+
+	if (inputManager.isKeyPressed(SDLK_s))
+	{
+		move(glm::vec2(0.0f, -1.0f), levelData);
+		didPlayerMove = true;
+	}
+
+	if (inputManager.isKeyPressed(SDLK_a))
+	{
+		move(glm::vec2(-1.0f, 0.0f), levelData);
+		didPlayerMove = true;
+	}
+
+	if (inputManager.isKeyPressed(SDLK_d))
+	{
+		move(glm::vec2(1.0f, 0.0f), levelData);
+		didPlayerMove = true;
+	}
+
+
+
 
 	return didPlayerMove;
 }

@@ -23,6 +23,10 @@ public:
 					  std::vector<Unit*>& enemies,
 					  std::vector<Unit*>& humans);
 
+	bool collideWithUnits(std::vector<Unit*>& enemies,
+		std::vector<Unit*>& allies, const std::vector<std::string> &levelData);
+
+
 protected:
 	bool _canIMove(glm::vec2 &newPosition, const std::vector<std::string> &leveldata);
 
