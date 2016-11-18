@@ -40,7 +40,7 @@ MainGame::MainGame() :
 
 MainGame::~MainGame()
 {
-	
+	delete _crosshair;
 
 	for (size_t i = 0; i < _level.size(); i++)
 	{
@@ -90,7 +90,7 @@ void MainGame::_initSystems()
 
 	_spawnHumans(_level[_currLvl]->getLevelData(), 100);
 
-	_crosshair = new Crosshair(glm::vec2(30.0f), -1.0f, 200.0f, "Textures/other/PNG/circle.png");
+	_crosshair = new Crosshair(glm::vec2(30.0f), -1.0f, 250.0f, "Textures/other/PNG/circle.png");
 
 }
 
@@ -120,7 +120,9 @@ void MainGame::_gameloop() {
 		_camera.setPosition(_player->getPosition() + _player->getSize() / 2.0f);
 		_camera.update();
 
+
 		_crosshair->update(_camera.convertScreenToWorld(_inputManager.getMouseCoords()), _player->getPosition());
+
 
 		_drawGame();
 
@@ -297,24 +299,19 @@ void MainGame::_updateUnits()
 
 	for (size_t j = 0; j < _humans.size(); j++)
 	{
-		_humans[j]->move(_enemies);
+		_humans[j]->move(_enemies, _humans);
 		_humans[j]->collideWithUnits(_enemies, _humans, _level[_currLvl]->getLevelData());
-	}
-	for (size_t i = 0; i < _enemies.size(); i++)
-	{
-		_enemies[i]->move(_humans);
-		_enemies[i]->collideWithUnits(_enemies, _humans, _level[_currLvl]->getLevelData());
-
-	}
-
-	for (size_t j = 0; j < _humans.size(); j++)
-	{
 		_humans[j]->collideWithLevel(_level[_currLvl]->getLevelData());
+
+	
 	}
 	for (size_t i = 0; i < _enemies.size(); i++)
 	{
-
+		_enemies[i]->move(_humans, _enemies);
+		_enemies[i]->collideWithUnits(_enemies, _humans, _level[_currLvl]->getLevelData());
 		_enemies[i]->collideWithLevel(_level[_currLvl]->getLevelData());
+	
+	
 
 	}
 

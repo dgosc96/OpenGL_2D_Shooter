@@ -71,7 +71,7 @@ void Level::loadFile(const std::string &filePath, std::vector<Unit*>& enemies)
 				_spriteBatch.draw(destRect, uvRect, floorTexture, 0.0f, color);
 				break;
 			case 'Z':
-				enemies.push_back(new Zombie(glm::vec4(x * TILE_WIDTH, y * TILE_WIDTH, UNIT_WIDTH, UNIT_WIDTH)));
+				enemies.push_back(new Zombie(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH)));
 
 				line[x] = '.';
 				_spriteBatch.draw(destRect, uvRect, floorTexture, 0.0f, color);

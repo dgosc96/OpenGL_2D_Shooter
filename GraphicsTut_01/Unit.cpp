@@ -6,7 +6,7 @@
 #include <MexEngine/ResourceManager.h>
 #include <algorithm>
 #include <math.h>
-
+#include <SDL\SDL.h>
 
 
 Unit::Unit()
@@ -68,7 +68,6 @@ bool Unit::collideWithUnits(std::vector<Unit*>& enemies,
 		{
 			if (CollideWithUnit(enemies[i], levelData)) {
 				didCollide = true;
-				attack(enemies[i]);
 				_direction *= -1;
 			}
 
@@ -129,6 +128,45 @@ bool Unit::collideWithLevel(const std::vector<std::string> &levelData)
 	}
 	return false;
 
+}
+
+
+bool Unit::attack(Unit* target)
+{
+	float currTime = (float)SDL_GetTicks() / 1000;
+
+	bool isTargetDead = false;
+
+	if (currTime - _lastAttackTime >= _attackSpeed)
+	{
+		target->takeDMG(_damage);
+
+
+		if (target->getHealth() <= 0)
+		{
+
+			isTargetDead = true;
+		}
+
+		_lastAttackTime = currTime;
+	}
+
+	return isTargetDead;
+
+}
+
+
+void Unit::takeDMG(int amount) 
+{
+	float damageRatio = _health / amount;
+
+	_health = _health - amount; 
+
+
+
+	_color.r -= _color.r / damageRatio / 2;
+	_color.g -= _color.g / damageRatio / 2;
+	_color.b -= _color.b / damageRatio / 2;
 }
 
 
@@ -270,3 +308,6 @@ void Unit::_swapCollidingTiles(std::vector<CollidingTile> &collidingTiles, int a
 	collidingTiles[b] = buffer;
 
 }
+
+
+

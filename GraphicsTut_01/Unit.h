@@ -28,10 +28,14 @@ public:
 
 	virtual void update() {}
 	
-	virtual void move(std::vector<Unit*>& enemies) {}
+	virtual void move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies) {}
 	virtual void move() {}
 
-	virtual void attack(Unit* target){}
+	virtual bool attack(Unit* target);
+
+	void takeDMG(int amount);
+
+	int getHealth() { return _health; }
 
 	virtual bool		CollideWithUnit		(Unit* unit, const std::vector<std::string> &levelData);
 
@@ -67,8 +71,11 @@ protected:
 
 
 
-	int _health, _damage;
+	int		_health, _damage;
+	float	_attackSpeed;
 
+
+	float _lastAttackTime;
 
 	float				_speed;
 	float				_depth;
@@ -80,8 +87,8 @@ protected:
 
 	MexEngine::Color	_color;
 
-	glm::vec2 _direction;
-	float	  _dirChangingTime;
+	glm::vec2			_direction;
+	float				_dirChangingTime;
 
 	float				_radius;
 };

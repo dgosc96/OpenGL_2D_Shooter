@@ -69,5 +69,17 @@ namespace MexEngine
 
 	}
 
+	glm::vec2 Camera2D::convertWorldToScreen(glm::vec2 worldCoords)
+	{
+		worldCoords -= _position;
+
+		worldCoords *= _scale;
+
+		worldCoords += glm::vec2(_screenWidth / 2, _screenHeight / 2);
+
+		worldCoords.y += _screenHeight;
+
+		return worldCoords;
+	}
 
 }

@@ -15,6 +15,9 @@ Human::Human(glm::vec4 posAndSize, float speed)
 	_depth = 0.0f;
 	_textureID = MexEngine::ResourceManager::getTexture("Textures/other/PNG/circle.png").id;
 	_direction = glm::vec2(getRandomNumb(-1.0f, 1.0f), getRandomNumb(-1.0f, 1.0f));
+
+	_health = 200;
+	_damage = 1;
 }
 
 
@@ -23,7 +26,7 @@ Human::~Human()
 }
 
 
-void Human::move(std::vector<Unit*>& enemies)
+void Human::move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies)
 {
 	glm::vec2 dest;
 

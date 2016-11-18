@@ -9,7 +9,7 @@ public:
 	~Human();
 	
 
-	virtual void move(std::vector<Unit*>& enemies);
+	virtual void move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies);
 
 
 };

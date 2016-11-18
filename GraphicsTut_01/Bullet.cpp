@@ -13,6 +13,7 @@ Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float speed, int lifeTime, glm::vec
 	_depth = 1.0f;
 	_textureID = MexEngine::ResourceManager::getTexture("Textures/jimmyJump_pack/PNG/Bullet.png").id;
 
+	_damage = 40;
 }
 
 
@@ -65,7 +66,13 @@ bool Bullet::collideWithUnits(std::vector<Unit*>& enemies,
 		{
 			if (CollideWithUnit(enemies[i], levelData)) {
 				didCollide = true;
-				attack(enemies[i]);
+				if (attack(enemies[i]))
+				{
+					delete enemies[i];
+					enemies[i] = enemies.back();
+					enemies.pop_back();
+				}
+				
 				_direction *= -1;
 			}
 

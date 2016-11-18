@@ -15,6 +15,9 @@ Player::Player(glm::vec4 posAndSize, float speed)
 	_depth = 0.0f;
 	_textureID = MexEngine::ResourceManager::getTexture("Textures/other/PNG/circle.png").id;
 
+
+	_health = 1111;
+
 }
 
 
@@ -56,13 +59,15 @@ bool Player::processInput(	MexEngine::InputManager&		inputManager,
 							glm::vec2&						mouseCoords)
 {
 	bool didPlayerMove = false;
-
 	float currTime = (float)SDL_GetTicks() / 1000;
+
+
+
 	if (inputManager.isKeyPressed(SDL_BUTTON_LEFT))
 	{
 		static float LastShotTime;
 
-		if (currTime - LastShotTime >= getRandomNumb(0.0f, 0.05f))
+		if (currTime - LastShotTime >= getRandomNumb(0.01f, 0.15f))
 		{
 
 			shoot(mouseCoords, 5.0f);
@@ -80,21 +85,21 @@ bool Player::processInput(	MexEngine::InputManager&		inputManager,
 		static float LastShotTimeR;
 
 
-		if (currTime - LastShotTimeR >= getRandomNumb(1.52f, 1.55f))
+		if (currTime - LastShotTimeR >= getRandomNumb(2.52f, 2.55f))
 		{
 
 
-			for (size_t i = 0; i <= 10; i++)
+			for (size_t i = 0; i <= 20; i++)
 			{
-				shoot(mouseCoords, 30.0f, 30.0f);
+				shoot(mouseCoords, 30.0f);
 			}
 
 
 			LastShotTimeR = currTime;
 
-			inputManager.releaseKey(SDL_BUTTON_RIGHT);
+			
 		}
-
+		inputManager.releaseKey(SDL_BUTTON_RIGHT);
 
 	}
 
