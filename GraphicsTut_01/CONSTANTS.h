@@ -1,5 +1,5 @@
 #pragma once
-const float TILE_WIDTH = 64.0f;
+const float TILE_WIDTH = 100.0f;
 const float TILE_RADIUS = TILE_WIDTH / 2.0f;
 
 const float UNIT_WIDTH = 54.0f;

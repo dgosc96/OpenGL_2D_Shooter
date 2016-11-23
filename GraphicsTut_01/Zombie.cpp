@@ -8,7 +8,7 @@
 
 Zombie::Zombie(glm::vec2 pos, glm::vec2 size, float speed)
 {
-	_color.setColor(0, 128, 0);
+	_color.setColor(0, getRandomNumb(100, 128), 0);
 	_position = pos;
 	_size = size;
 	_radius = _size.x / 2.0f;
@@ -17,7 +17,7 @@ Zombie::Zombie(glm::vec2 pos, glm::vec2 size, float speed)
 	_textureID = MexEngine::ResourceManager::getTexture("Textures/other/PNG/circle.png").id;
 
 	_damage = 10;
-	_health = 350;
+	_health = 250;
 	_attackSpeed = 0.25f;
 
 	_lastAttackTime = 0.0f;
@@ -67,13 +67,7 @@ void Zombie::move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies)
 		{
 			if (attack(closestEnemy) == true)
 			{
-
-				allies.push_back(new Zombie(closestEnemy->getPosition(), closestEnemy->getSize()));
-
-				delete closestEnemy;
-				enemies[closestEnemyIndex] = enemies.back();
-				enemies.pop_back();
-
+				_infect(enemies, allies, closestEnemyIndex);
 
 			}
 		}
@@ -83,7 +77,7 @@ void Zombie::move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies)
 	{
 		float currTime = (float)SDL_GetTicks() / 1000.0f;
 
-		if (currTime - _dirChangingTime > getRandomNumb(3.5f, 5.5f))
+		if (currTime - _dirChangingTime > getRandomNumb(3.5f, 5.5f) || currTime < 10.0f)
 		{
 			dest = glm::vec2(getRandomNumb(-200.0f, 200.0f), getRandomNumb(-200.0f, 200.0f));
 
@@ -95,5 +89,20 @@ void Zombie::move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies)
 		_position = _position + (_direction * _speed);
 	}
 
+
+}
+
+
+void Zombie::_infect(std::vector<Unit*>& enemies, std::vector<Unit*>& allies, size_t killedEnemyINDX)
+{
+
+	allies.push_back(new Zombie(enemies[killedEnemyINDX]->getPosition(), 
+								enemies[killedEnemyINDX]->getSize()));
+
+	delete enemies[killedEnemyINDX];
+	enemies[killedEnemyINDX] = nullptr;
+
+	enemies[killedEnemyINDX] = enemies.back();
+	enemies.pop_back();
 
 }

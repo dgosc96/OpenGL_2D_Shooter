@@ -33,14 +33,13 @@ MainGame::MainGame() :
 
 #endif
 
-	
+
 
 	_camera.init(_screenWidth, _screenHeight);
 }
 
 MainGame::~MainGame()
 {
-	delete _crosshair;
 
 	for (size_t i = 0; i < _level.size(); i++)
 	{
@@ -82,15 +81,16 @@ void MainGame::_initSystems()
 	_level.push_back(new Level("Levels/default.lvl", _enemies));
 
 	glm::vec2 playerPosition = _level[_currLvl]->getPlayerPos();
+
 	_player = new Player(glm::vec4(playerPosition, UNIT_WIDTH, UNIT_WIDTH));
 
 	_humans.push_back(_player);
 
 	_camera.setPosition(playerPosition + (float)(UNIT_WIDTH / 2));
 
-	_spawnHumans(_level[_currLvl]->getLevelData(), 100);
+	_spawnHumans(_level[_currLvl]->getLevelData(), 600);
 
-	_crosshair = new Crosshair(glm::vec2(30.0f), -1.0f, 250.0f, "Textures/other/PNG/circle.png");
+	_crosshair.init(glm::vec2(30.0f), -1.0f, 250.0f, "Textures/other/PNG/circle.png");
 
 }
 
@@ -105,30 +105,46 @@ void MainGame::_initShaders() {
 void MainGame::_gameloop() {
 	while (_gameState != GameState::EXIT)
 	{
+
 		_fpsLimiter.begin();
 
 		_processInput();
 
 		_time = (float)SDL_GetTicks() / 1000;
 
+	
+
+
+		if (!_humans.empty())
+		{
+			if (_player == _humans[0])
+			{
+				_player->updateBullets(_level[_currLvl]->getLevelData(), _enemies, _humans);
+
+				_camera.setPosition(_player->getPosition() + _player->getSize() / 2.0f);
+
+				_crosshair.update(_camera.convertScreenToWorld(_inputManager.getMouseCoords()), _player->getPosition());
+
+			}
+			else if (_player != nullptr)
+			{
+				_player = nullptr;
+			}
+		}
+		else if (_player != nullptr)
+		{
+			_player = nullptr;
+		}
+
 		_updateUnits();
-		
-		_player->updateBullets(_level[_currLvl]->getLevelData(), _enemies, _humans);
 
-		
-
-		_camera.setPosition(_player->getPosition() + _player->getSize() / 2.0f);
 		_camera.update();
-
-
-		_crosshair->update(_camera.convertScreenToWorld(_inputManager.getMouseCoords()), _player->getPosition());
-
 
 		_drawGame();
 
-
-
 		_fps = _fpsLimiter.end();
+
+#if DEBUG
 
 		static int frameCounter = 0;
 		frameCounter++;
@@ -138,6 +154,11 @@ void MainGame::_gameloop() {
 			std::cout << (int)_fps << " FPS" << std::endl;
 			frameCounter = 0;
 		}
+
+#endif 
+
+
+
 
 	}
 }
@@ -226,13 +247,17 @@ void MainGame::_processInput() {
 		_camera.setScale(_camera.getScale() / SCALE_SPEED);
 	}
 
+	if (_player != nullptr)
+	{
+		bool didPlayerMove = _player->processInput
+		(
+			_inputManager,
+			_level[_currLvl]->getLevelData(),
+			_crosshair.getCenterPosition()
+		);
+	}
 
-	bool didPlayerMove = _player->processInput
-	(
-		_inputManager,
-		_level[_currLvl]->getLevelData(),
-		_crosshair->getCenterPosition()
-	);
+
 
 
 }
@@ -258,13 +283,16 @@ void MainGame::_drawGame() {
 
 	_spriteBatch.begin(MexEngine::GlyphSortType::BACK_TO_FRONT);
 
+	if (_player != nullptr)
+	{
+		_crosshair.draw(_spriteBatch);
+	}
 
-	_crosshair->draw(_spriteBatch);
 	_level[_currLvl]->draw();
 
 	_drawUnits();
 
-	
+
 
 	_spriteBatch.end();
 
@@ -303,15 +331,15 @@ void MainGame::_updateUnits()
 		_humans[j]->collideWithUnits(_enemies, _humans, _level[_currLvl]->getLevelData());
 		_humans[j]->collideWithLevel(_level[_currLvl]->getLevelData());
 
-	
+
 	}
 	for (size_t i = 0; i < _enemies.size(); i++)
 	{
 		_enemies[i]->move(_humans, _enemies);
 		_enemies[i]->collideWithUnits(_enemies, _humans, _level[_currLvl]->getLevelData());
 		_enemies[i]->collideWithLevel(_level[_currLvl]->getLevelData());
-	
-	
+
+
 
 	}
 
@@ -321,7 +349,7 @@ void MainGame::_updateUnits()
 
 void MainGame::_spawnHumans(const std::vector<std::string>& leveldata, size_t amount)
 {
-	
+
 	for (size_t i = 0; i < amount;)
 	{
 		float x = getRandomNumb(1.0f, (leveldata[0].size() - 2) * TILE_WIDTH);

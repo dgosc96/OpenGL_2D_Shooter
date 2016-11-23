@@ -21,7 +21,7 @@ Level::~Level()
 {
 }
 
-
+#include "Utilities.h"
 void Level::loadFile(const std::string &filePath, std::vector<Unit*>& enemies)
 {
 	GLint wallTexture = MexEngine::ResourceManager::getTexture("Textures/other/PNG/wall.png").id;
@@ -39,6 +39,8 @@ void Level::loadFile(const std::string &filePath, std::vector<Unit*>& enemies)
 	_spriteBatch.begin();
 
 	MexEngine::Color color;
+
+
 	glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 
 	std::string line;
@@ -53,6 +55,10 @@ void Level::loadFile(const std::string &filePath, std::vector<Unit*>& enemies)
 
 			glm::vec4 destRect(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
 
+			int randColor = getRandomNumb(145, 165);
+			color.r = randColor;
+			color.g = randColor;
+			color.b = randColor;
 
 			switch (line[x])
 			{

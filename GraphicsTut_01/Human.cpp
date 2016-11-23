@@ -7,7 +7,7 @@
 
 Human::Human(glm::vec4 posAndSize, float speed)
 {
-	_color.setColor(0, 0, 128);
+	_color.setColor(0, 0, getRandomNumb(100, 128));
 	_position = glm::vec2(posAndSize.x, posAndSize.y);
 	_size = glm::vec2(posAndSize.z, posAndSize.w);
 	_radius = _size.x / 2.0f;

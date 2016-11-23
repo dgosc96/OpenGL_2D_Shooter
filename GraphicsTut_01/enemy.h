@@ -5,6 +5,6 @@ class Enemy : public Unit
 {
 public:
 	Enemy();
-	~Enemy();
+	virtual ~Enemy();
 };
 

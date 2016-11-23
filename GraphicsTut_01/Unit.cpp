@@ -9,6 +9,16 @@
 #include <SDL\SDL.h>
 
 
+#include "DEBUG.h"
+
+#if DEBUG
+
+#include <iostream>
+
+#endif
+
+
+
 Unit::Unit()
 {
 }
@@ -19,9 +29,9 @@ Unit::~Unit()
 }
 
 
-
 void Unit::draw(MexEngine::SpriteBatch& spriteBatch)
 {
+
 	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
 
 	glm::vec4 posAndSize = glm::vec4(_position.x, _position.y, _size.x, _size.y);
@@ -35,6 +45,8 @@ void Unit::draw(MexEngine::SpriteBatch& spriteBatch)
 
 bool Unit::CollideWithUnit(Unit* target, const std::vector<std::string> &levelData)
 {
+	bool didColide = false;
+
 	float TARGET_UNIT_RADIUS = target->getSize().x / 2.0f;
 	float MIN_DISTANCE = _radius + TARGET_UNIT_RADIUS;
 
@@ -43,17 +55,17 @@ bool Unit::CollideWithUnit(Unit* target, const std::vector<std::string> &levelDa
 
 	float collisionDepth = MIN_DISTANCE - distance;
 
-	if (collisionDepth > 0)
+	if (collisionDepth >= 0)
 	{
 		glm::vec2 collisionDepthVec = glm::normalize(distVec) * collisionDepth;
 
 		this->_position += collisionDepthVec / 2.0f;
 		target->_position -= collisionDepthVec / 2.0f;
 
-		return true;
+		didColide = true;
 	}
 
-	return false;
+	return didColide;
 }
 
 
@@ -92,6 +104,7 @@ bool Unit::collideWithUnits(std::vector<Unit*>& enemies,
 bool Unit::collideWithLevel(const std::vector<std::string> &levelData)
 {
 	std::vector<CollidingTile> collidingTiles;
+	bool didColide = false;
 
 	_checkTilePos(levelData,
 		collidingTiles,
@@ -124,9 +137,9 @@ bool Unit::collideWithLevel(const std::vector<std::string> &levelData)
 		}
 
 		_direction *= -1;
-		return true;
+		didColide = true;
 	}
-	return false;
+	return didColide;
 
 }
 
@@ -156,12 +169,15 @@ bool Unit::attack(Unit* target)
 }
 
 
-void Unit::takeDMG(int amount) 
+void Unit::takeDMG(int amount)
 {
 	float damageRatio = _health / amount;
 
-	_health = _health - amount; 
+	_health = _health - amount;
 
+#if DEBUG
+
+#endif 
 
 
 	_color.r -= _color.r / damageRatio / 2;
@@ -192,6 +208,8 @@ void Unit::_checkTilePos(const std::vector<std::string> &levelData,
 
 	glm::vec2 cornerPos = glm::vec2(floor(x / TILE_WIDTH),
 		floor(y / TILE_WIDTH));
+
+
 
 
 	if (levelData[cornerPos.y][cornerPos.x] != '.')

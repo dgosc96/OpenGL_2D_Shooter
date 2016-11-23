@@ -6,7 +6,7 @@ public:
 	Human(){}
 	Human(glm::vec4 posAndSize, float speed = 2.0f);
 
-	~Human();
+	virtual ~Human();
 	
 
 	virtual void move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies);

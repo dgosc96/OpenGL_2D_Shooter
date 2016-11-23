@@ -10,6 +10,8 @@ public:
 
 	void move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies);
 
+private:
+	void _infect(std::vector<Unit*>& enemies, std::vector<Unit*>& allies, size_t killedEnemyINDX);
 	
 
 

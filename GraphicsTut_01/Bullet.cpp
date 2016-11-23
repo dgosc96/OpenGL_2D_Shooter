@@ -1,6 +1,8 @@
 #include "Bullet.h"
 #include <iostream>
 
+#include "Utilities.h"
+
 
 Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float speed, int lifeTime, glm::vec2	size) :
 	_direction	(dir),
@@ -13,7 +15,11 @@ Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float speed, int lifeTime, glm::vec
 	_depth = 1.0f;
 	_textureID = MexEngine::ResourceManager::getTexture("Textures/jimmyJump_pack/PNG/Bullet.png").id;
 
-	_damage = 40;
+	_damage = 70;
+
+	_color.r = getRandomNumb(110, 255);
+	_color.g = getRandomNumb(110, 255);
+	_color.b = getRandomNumb(110, 255);
 }
 
 
@@ -66,6 +72,8 @@ bool Bullet::collideWithUnits(std::vector<Unit*>& enemies,
 		{
 			if (CollideWithUnit(enemies[i], levelData)) {
 				didCollide = true;
+				std::cout << "SHOT!!!\n";
+
 				if (attack(enemies[i]))
 				{
 					delete enemies[i];

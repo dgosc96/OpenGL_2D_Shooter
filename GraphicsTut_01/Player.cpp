@@ -16,7 +16,7 @@ Player::Player(glm::vec4 posAndSize, float speed)
 	_textureID = MexEngine::ResourceManager::getTexture("Textures/other/PNG/circle.png").id;
 
 
-	_health = 1111;
+	_health = 500;
 
 }
 
@@ -39,7 +39,6 @@ void Player::init(glm::vec4 posAndSize, float speed)
 void Player::draw(MexEngine::SpriteBatch& spriteBatch)
 {
 
-
 	for (size_t i = 0; i < _bullets.size(); i++)
 	{
 		_bullets[i].draw(spriteBatch);
@@ -54,9 +53,9 @@ void Player::draw(MexEngine::SpriteBatch& spriteBatch)
 
 }
 
-bool Player::processInput(	MexEngine::InputManager&		inputManager,
-							const std::vector<std::string>& levelData,
-							glm::vec2&						mouseCoords)
+bool Player::processInput(MexEngine::InputManager&		inputManager,
+	const std::vector<std::string>& levelData,
+	glm::vec2&						mouseCoords)
 {
 	bool didPlayerMove = false;
 	float currTime = (float)SDL_GetTicks() / 1000;
@@ -97,37 +96,42 @@ bool Player::processInput(	MexEngine::InputManager&		inputManager,
 
 			LastShotTimeR = currTime;
 
-			
+
 		}
 		inputManager.releaseKey(SDL_BUTTON_RIGHT);
 
 	}
 
+	glm::vec2 direction(0.0f, 0.0f);
 
 	if (inputManager.isKeyPressed(SDLK_w))
 	{
-		move(glm::vec2(0.0f, 1.0f), levelData);
+		direction += glm::vec2(0.0f, 1.0f);
 		didPlayerMove = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_s))
 	{
-		move(glm::vec2(0.0f, -1.0f), levelData);
+		direction += glm::vec2(0.0f, -1.0f);
 		didPlayerMove = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_a))
 	{
-		move(glm::vec2(-1.0f, 0.0f), levelData);
+		direction += glm::vec2(-1.0f, 0.0f);
 		didPlayerMove = true;
 	}
 
 	if (inputManager.isKeyPressed(SDLK_d))
 	{
-		move(glm::vec2(1.0f, 0.0f), levelData);
+		direction += glm::vec2(1.0f, 0.0f);
 		didPlayerMove = true;
 	}
 
+	if (didPlayerMove == true)
+	{
+		move(direction);
+	}
 
 
 
@@ -135,16 +139,22 @@ bool Player::processInput(	MexEngine::InputManager&		inputManager,
 }
 
 
-void Player::move(glm::vec2 direction, const std::vector<std::string>& levelData)
+void Player::move(glm::vec2 direction)
 {
-	glm::vec2 newPosition;
-	_position.x += (direction.x * _speed);
-	_position.y += (direction.y * _speed);
+	if (direction != glm::vec2(0.0f, 0.0f))
+	{
 
+		direction = glm::normalize(direction);
+
+		_position.x += (direction.x * _speed);
+		_position.y += (direction.y * _speed);
+
+		direction = glm::vec2(0.0f, 0.0f);
+	}
 }
 
 void Player::shoot(glm::vec2& mouseCoords, float spreadRange, float speed, float bulletSize)
-{	
+{
 	int bulletLifeTime = 350;
 
 	glm::vec2 spread(getRandomNumb(-spreadRange, spreadRange), getRandomNumb(-spreadRange, spreadRange));
@@ -153,13 +163,13 @@ void Player::shoot(glm::vec2& mouseCoords, float spreadRange, float speed, float
 	direction = glm::normalize(direction);
 
 	_bullets.emplace_back(_position + (_size / 2.0f - (bulletSize / 2.0f)), direction, speed, bulletLifeTime, glm::vec2(bulletSize));
-	
+
 }
 
 
-void Player::updateBullets(const std::vector<std::string> &levelData, 
-								 std::vector<Unit*>& enemies,
-								 std::vector<Unit*>& humans)
+void Player::updateBullets(const std::vector<std::string> &levelData,
+	std::vector<Unit*>& enemies,
+	std::vector<Unit*>& humans)
 {
 	for (size_t i = 0; i < _bullets.size();)
 	{

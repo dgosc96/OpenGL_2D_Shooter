@@ -54,7 +54,7 @@ private:
 
 	MexEngine::Window _window;
 	
-	Crosshair* _crosshair;
+	Crosshair _crosshair;
 
 
 	int _screenWidth;
@@ -75,8 +75,8 @@ private:
 
 
 	Player*				_player;
-	std::vector<Unit*> _enemies;
-	std::vector<Unit*> _humans;
+	std::vector<Unit*>  _enemies;
+	std::vector<Unit*>  _humans;
 
 
 	int					_currLvl;
