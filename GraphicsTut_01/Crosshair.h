@@ -10,7 +10,7 @@ public:
 
 	void init(glm::vec2 size, float depth, float radius, std::string texturePath);
 
-	void update(glm::vec2 mousePos, glm::vec2 playerPos);
+	void update(glm::vec2 mousePos, glm::vec2 playerCenterPos);
 
 	void draw(MexEngine::SpriteBatch& spriteBatch);
 

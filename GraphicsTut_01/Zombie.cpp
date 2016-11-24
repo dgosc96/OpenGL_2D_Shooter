@@ -16,7 +16,7 @@ Zombie::Zombie(glm::vec2 pos, glm::vec2 size, float speed)
 	_depth = 0.0f;
 	_textureID = MexEngine::ResourceManager::getTexture("Textures/other/PNG/circle.png").id;
 
-	_damage = 10;
+	_damage = 20;
 	_health = 250;
 	_attackSpeed = 0.25f;
 

@@ -1,6 +1,7 @@
 #include "TextureCache.h"
 #include "ImageLoader.h"
 #include <iostream>
+#include "DEBUG.h"
 
 namespace MexEngine
 {
@@ -26,7 +27,11 @@ namespace MexEngine
 		
 			_textureMap.insert(make_pair(texturePath, newTexture));
 
+#if DEBUG
 			std::cout << "Loaded texture from file!\n";
+#endif // DEBUG
+
+			
 			return newTexture;
 		}
 		return mapIterator->second;

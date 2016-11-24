@@ -16,7 +16,7 @@ Player::Player(glm::vec4 posAndSize, float speed)
 	_textureID = MexEngine::ResourceManager::getTexture("Textures/other/PNG/circle.png").id;
 
 
-	_health = 500;
+	_health = 400;
 
 }
 
@@ -88,7 +88,7 @@ bool Player::processInput(MexEngine::InputManager&		inputManager,
 		{
 
 
-			for (size_t i = 0; i <= 20; i++)
+			for (size_t i = 0; i <= 100; i++)
 			{
 				shoot(mouseCoords, 30.0f);
 			}
@@ -156,6 +156,7 @@ void Player::move(glm::vec2 direction)
 void Player::shoot(glm::vec2& mouseCoords, float spreadRange, float speed, float bulletSize)
 {
 	int bulletLifeTime = 350;
+
 
 	glm::vec2 spread(getRandomNumb(-spreadRange, spreadRange), getRandomNumb(-spreadRange, spreadRange));
 

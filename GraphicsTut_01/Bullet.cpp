@@ -16,10 +16,12 @@ Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float speed, int lifeTime, glm::vec
 	_textureID = MexEngine::ResourceManager::getTexture("Textures/jimmyJump_pack/PNG/Bullet.png").id;
 
 	_damage = 70;
+	_attackSpeed = 0.0f;
+	_lastAttackTime = 0.0f;
 
-	_color.r = getRandomNumb(110, 255);
-	_color.g = getRandomNumb(110, 255);
-	_color.b = getRandomNumb(110, 255);
+	_color.r = getRandomNumb(60, 255);
+	_color.g = getRandomNumb(60, 255);
+	_color.b = getRandomNumb(60, 255);
 }
 
 
@@ -35,7 +37,7 @@ bool Bullet::update(const std::vector<std::string> &leveldata, std::vector<Unit*
 	glm::vec2 newPos = _position + (_direction * _speed);
 	_lifeTime--;
 
-	if (_lifeTime == 0 || _canIMove(newPos, leveldata) == false || collideWithUnits(enemies, humans, leveldata))
+	if (_lifeTime == 0 || collideWithUnits(enemies, humans, leveldata) || _canIMove(newPos, leveldata) == false)
 	{
 		return true;
 	}
@@ -72,10 +74,11 @@ bool Bullet::collideWithUnits(std::vector<Unit*>& enemies,
 		{
 			if (CollideWithUnit(enemies[i], levelData)) {
 				didCollide = true;
-				std::cout << "SHOT!!!\n";
+		
 
 				if (attack(enemies[i]))
 				{
+					
 					delete enemies[i];
 					enemies[i] = enemies.back();
 					enemies.pop_back();
@@ -99,4 +102,22 @@ bool Bullet::collideWithUnits(std::vector<Unit*>& enemies,
 		}
 	}
 	return didCollide;
+}
+
+bool Bullet::attack(Unit* target)
+{
+
+	bool isTargetDead = false;
+
+		target->takeDMG(_damage);
+
+
+		if (target->getHealth() <= 0)
+		{
+
+			isTargetDead = true;
+		}
+
+	return isTargetDead;
+
 }

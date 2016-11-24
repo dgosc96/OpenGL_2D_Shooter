@@ -88,7 +88,7 @@ void MainGame::_initSystems()
 
 	_camera.setPosition(playerPosition + (float)(UNIT_WIDTH / 2));
 
-	_spawnHumans(_level[_currLvl]->getLevelData(), 600);
+	_spawnHumans(_level[_currLvl]->getLevelData(), 400);
 
 	_crosshair.init(glm::vec2(30.0f), -1.0f, 250.0f, "Textures/other/PNG/circle.png");
 
@@ -112,8 +112,7 @@ void MainGame::_gameloop() {
 
 		_time = (float)SDL_GetTicks() / 1000;
 
-	
-
+		_updateUnits();
 
 		if (!_humans.empty())
 		{
@@ -123,7 +122,7 @@ void MainGame::_gameloop() {
 
 				_camera.setPosition(_player->getPosition() + _player->getSize() / 2.0f);
 
-				_crosshair.update(_camera.convertScreenToWorld(_inputManager.getMouseCoords()), _player->getPosition());
+				_crosshair.update(_camera.convertScreenToWorld(_inputManager.getMouseCoords()), _player->getCenterPosition());
 
 			}
 			else if (_player != nullptr)
@@ -135,8 +134,6 @@ void MainGame::_gameloop() {
 		{
 			_player = nullptr;
 		}
-
-		_updateUnits();
 
 		_camera.update();
 

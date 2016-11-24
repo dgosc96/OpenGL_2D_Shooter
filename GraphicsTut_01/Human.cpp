@@ -51,6 +51,11 @@ void Human::move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies)
 	{
 		dest = _getDistanceVec(closestEnemy);
 		_direction = glm::normalize(dest);
+
+		if (closestDist < 100.0f)
+		{
+			_direction *= -1.0f;
+		}
 		_position = _position + (_direction * (_speed * 2.0f));
 	}
 	else

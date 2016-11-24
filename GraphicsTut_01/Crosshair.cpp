@@ -24,12 +24,12 @@ void Crosshair::init(glm::vec2 size, float depth, float radius, std::string text
 }
 
 
-void Crosshair::update(glm::vec2 mousePos, glm::vec2 playerPos)
+void Crosshair::update(glm::vec2 mousePos, glm::vec2 playerCenterPos)
 {
-	glm::vec2 diffVec = mousePos - playerPos;
+	glm::vec2 diffVec = mousePos - playerCenterPos;
 	float mouseDist = glm::length(diffVec);
 
-	_position = (playerPos + (glm::normalize(diffVec) * _radius));
+	_position = (playerCenterPos + (glm::normalize(diffVec) * _radius));
 
 }
 

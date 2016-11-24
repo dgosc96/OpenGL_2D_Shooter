@@ -23,6 +23,8 @@ public:
 					  std::vector<Unit*>& enemies,
 					  std::vector<Unit*>& humans);
 
+	bool attack(Unit* target);
+
 	bool collideWithUnits(std::vector<Unit*>& enemies,
 		std::vector<Unit*>& allies, const std::vector<std::string> &levelData);
 

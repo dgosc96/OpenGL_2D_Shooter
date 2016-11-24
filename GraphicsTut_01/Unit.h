@@ -22,6 +22,8 @@ public:
 	virtual ~Unit();
 
 	glm::vec2	getPosition()					{ return _position; }
+	glm::vec2	getCenterPosition()				{ return (_position + (_size / 2.0f)); }
+
 	glm::vec2	getSize()						{ return _size; }
 
 	void		setPosition(glm::vec2 position) { _position = position; }
