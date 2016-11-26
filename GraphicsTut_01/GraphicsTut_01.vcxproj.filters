@@ -13,78 +13,99 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Units">
+      <UniqueIdentifier>{a3e005ab-784c-45b0-beab-c932321d2cf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Config">
+      <UniqueIdentifier>{7b4e3bb9-58d7-4594-aa86-0f5c5fde31f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameManagment">
+      <UniqueIdentifier>{074cb676-8edb-4a8b-b61e-3863e49792fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Other">
+      <UniqueIdentifier>{1104563b-6b5a-4f67-9080-075b2000445f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameManagment">
+      <UniqueIdentifier>{a15641a6-3d4c-440e-9b49-d1472535d7b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Units">
+      <UniqueIdentifier>{0396d5e6-da02-4be8-b2e5-e441b4d16e5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Other">
+      <UniqueIdentifier>{cc172240-09bb-4ec0-ae61-193ecec370b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Units\PlayerTools">
+      <UniqueIdentifier>{6862e115-e45e-4601-82c3-7a5e6ec8f76e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files\GameManagment</Filter>
     </ClCompile>
     <ClCompile Include="MainGame.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GameManagment</Filter>
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Utilities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Level.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Unit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Human.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Zombie.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Units</Filter>
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Human.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files\GameManagment</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Unit.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Zombie.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities.cpp">
+      <Filter>Source Files\Other</Filter>
     </ClCompile>
     <ClCompile Include="Crosshair.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Units\PlayerTools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MainGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Utilities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Level.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DEBUG.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CONSTANTS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Unit.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Enemy.h">
+      <Filter>Header Files\Units</Filter>
     </ClInclude>
     <ClInclude Include="Human.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Unit.h">
+      <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="CONSTANTS.h">
+      <Filter>Header Files\Config</Filter>
     </ClInclude>
     <ClInclude Include="Zombie.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Units</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files\GameManagment</Filter>
+    </ClInclude>
+    <ClInclude Include="MainGame.h">
+      <Filter>Header Files\GameManagment</Filter>
     </ClInclude>
     <ClInclude Include="Crosshair.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities.h">
+      <Filter>Header Files\Other</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

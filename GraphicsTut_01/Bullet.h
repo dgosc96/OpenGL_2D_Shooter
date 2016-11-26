@@ -15,7 +15,7 @@ public:
 	Bullet(	glm::vec2	pos, 
 			glm::vec2	dir, 
 			float		speed, 
-			int			lifeTime, 
+			float		lifeTime, 
 			glm::vec2	size);
 	~Bullet();
 
@@ -33,7 +33,8 @@ protected:
 	bool _canIMove(glm::vec2 &newPosition, const std::vector<std::string> &leveldata);
 
 
-	int			_lifeTime;
+	float		_birthTime;
+	float		_lifeTime;
 	glm::vec2	_direction;
 
 

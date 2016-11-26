@@ -26,7 +26,7 @@ private:
 
 
 	GLint				_textureID;
-	MexEngine::Color	_color;
+	MexEngine::ColorRGBA8	_color;
 
 };
 

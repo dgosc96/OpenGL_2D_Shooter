@@ -13,10 +13,17 @@ namespace MexEngine
 		InputManager();
 		~InputManager();
 
+		void update();
+
 		void pressKey(unsigned int keyID);
 		void releaseKey(unsigned int keyID);
 
 		void setMouseCoords(float x, float y);
+
+		bool isKeyDown(unsigned int keyID);
+
+
+		bool wasKeyDown(unsigned int keyID);
 
 		bool isKeyPressed(unsigned int keyID);
 
@@ -24,6 +31,8 @@ namespace MexEngine
 
 	private:
 		std::unordered_map<unsigned int, bool> _keyMap;
+		std::unordered_map<unsigned int, bool> _prevKeyMap;
+
 		glm::vec2 _mouseCoords;
 
 	};

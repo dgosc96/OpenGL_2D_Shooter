@@ -9,7 +9,7 @@ namespace MexEngine
 		float y;
 	};
 
-	struct Color {
+	struct ColorRGBA8 {
 		GLubyte r = 255;
 		GLubyte g = 255;
 		GLubyte b = 255;
@@ -30,7 +30,7 @@ namespace MexEngine
 
 	struct Vertex {
 		Position position;
-		Color color;
+		ColorRGBA8 color;
 
 		//UV texture coordinates.
 		UV uv;

@@ -1,5 +1,7 @@
 #include "Zombie.h"
 #include <MexEngine/ResourceManager.h> 
+#include <MexEngine/TimeStep.h>
+
 #include "Utilities.h"
 #include <iostream>
 
@@ -59,7 +61,7 @@ void Zombie::move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies)
 	{
 		dest = _getDistanceVec(closestEnemy) * -1.0f;
 		_direction = glm::normalize(dest);
-		_position = _position + (_direction * (_speed * 3.0f));
+		_position += ((_direction * (_speed * 3.0f)) * MexEngine::TimeStep::SM_Delta.getDeltaTime());
 
 		closestDist = glm::length(_getDistanceVec(closestEnemy));
 
@@ -86,7 +88,7 @@ void Zombie::move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies)
 
 
 		}
-		_position = _position + (_direction * _speed);
+		_position += ((_direction * _speed) * MexEngine::TimeStep::SM_Delta.getDeltaTime());
 	}
 
 

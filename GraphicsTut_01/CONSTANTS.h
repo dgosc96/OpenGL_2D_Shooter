@@ -1,4 +1,8 @@
 #pragma once
+
+const float DESIRED_FPS = 60.0f;
+const float DESIRED_FRAMETIME = 1000.0f / DESIRED_FPS;
+
 const float TILE_WIDTH = 100.0f;
 const float TILE_RADIUS = TILE_WIDTH / 2.0f;
 

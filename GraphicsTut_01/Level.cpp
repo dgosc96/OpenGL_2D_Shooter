@@ -38,7 +38,7 @@ void Level::loadFile(const std::string &filePath, std::vector<Unit*>& enemies)
 
 	_spriteBatch.begin();
 
-	MexEngine::Color color;
+	MexEngine::ColorRGBA8 color;
 
 
 	glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);

@@ -2,6 +2,7 @@
 #include "Utilities.h"
 
 #include <MexEngine/ResourceManager.h>
+#include <MexEngine\TimeStep.h>
 
 #include <SDL/SDL.h>
 
@@ -56,7 +57,7 @@ void Human::move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies)
 		{
 			_direction *= -1.0f;
 		}
-		_position = _position + (_direction * (_speed * 2.0f));
+		_position = _position + (_direction * (_speed * 2.0f)) * MexEngine::TimeStep::SM_Delta.getDeltaTime();
 	}
 	else
 	{
@@ -70,7 +71,7 @@ void Human::move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies)
 			_direction = glm::normalize(dest);
 			
 		}
-		_position = _position + (_direction * _speed);
+		_position += ((_direction * _speed) * MexEngine::TimeStep::SM_Delta.getDeltaTime());
 	}
 	
 

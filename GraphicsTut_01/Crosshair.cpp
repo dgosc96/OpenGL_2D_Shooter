@@ -19,17 +19,19 @@ void Crosshair::init(glm::vec2 size, float depth, float radius, std::string text
 	_depth = depth;
 	_radius = radius;
 	_textureID = MexEngine::ResourceManager::getTexture("Textures/other/PNG/circle.png").id;
-	_color.setColor(255, 255, 255, 100);
+	_color.a = 100;
 
 }
 
 
 void Crosshair::update(glm::vec2 mousePos, glm::vec2 playerCenterPos)
 {
+
+
 	glm::vec2 diffVec = mousePos - playerCenterPos;
 	float mouseDist = glm::length(diffVec);
 
-	_position = (playerCenterPos + (glm::normalize(diffVec) * _radius));
+	_position = (playerCenterPos + (glm::normalize(diffVec) * _radius)) - _size / 2.0f;
 
 }
 

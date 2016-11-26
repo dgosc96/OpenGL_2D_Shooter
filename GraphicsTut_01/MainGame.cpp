@@ -4,11 +4,12 @@
 
 #include <MexEngine/Errors.h>
 #include <MexEngine/ResourceManager.h>
+#include <MexEngine/TimeStep.h>
+
 #include "Utilities.h"
 #include "CONSTANTS.h"
 
-#include "DEBUG.h"
-
+#include <MexEngine\DEBUG.h>
 
 
 
@@ -16,9 +17,8 @@
 MainGame::MainGame() :
 	_screenWidth(1024),
 	_screenHeight(768),
-	_time(0.0f),
 	_gameState(GameState::PLAY),
-	_maxFPS(60.0f),
+	_maxFPS(60),
 	_currLvl(0)
 {
 
@@ -88,7 +88,7 @@ void MainGame::_initSystems()
 
 	_camera.setPosition(playerPosition + (float)(UNIT_WIDTH / 2));
 
-	_spawnHumans(_level[_currLvl]->getLevelData(), 400);
+	_spawnHumans(_level[_currLvl]->getLevelData(), 100);
 
 	_crosshair.init(glm::vec2(30.0f), -1.0f, 250.0f, "Textures/other/PNG/circle.png");
 
@@ -105,37 +105,42 @@ void MainGame::_initShaders() {
 void MainGame::_gameloop() {
 	while (_gameState != GameState::EXIT)
 	{
-
+		MexEngine::TimeStep::SM_Delta.calcTDT(DESIRED_FRAMETIME);
 		_fpsLimiter.begin();
 
-		_processInput();
-
-		_time = (float)SDL_GetTicks() / 1000;
-
-		_updateUnits();
-
-		if (!_humans.empty())
+		while (MexEngine::TimeStep::SM_Delta.update_begin() == true)
 		{
-			if (_player == _humans[0])
+			_processInput();
+
+			_updateUnits();
+
+			if (!_humans.empty())
 			{
-				_player->updateBullets(_level[_currLvl]->getLevelData(), _enemies, _humans);
+				if (_player == _humans[0])
+				{
+					_player->updateBullets(_level[_currLvl]->getLevelData(), _enemies, _humans);
 
-				_camera.setPosition(_player->getPosition() + _player->getSize() / 2.0f);
+					_camera.setPosition(_player->getPosition() + _player->getSize() / 2.0f);
 
-				_crosshair.update(_camera.convertScreenToWorld(_inputManager.getMouseCoords()), _player->getCenterPosition());
+					_crosshair.update(_camera.convertScreenToWorld(_inputManager.getMouseCoords()), _player->getCenterPosition());
 
+				}
+				else if (_player != nullptr)
+				{
+					_player = nullptr;
+				}
 			}
 			else if (_player != nullptr)
 			{
 				_player = nullptr;
 			}
+			
+			_camera.update();
+			MexEngine::TimeStep::SM_Delta.update_end();
 		}
-		else if (_player != nullptr)
-		{
-			_player = nullptr;
-		}
+		
 
-		_camera.update();
+		_inputManager.update();
 
 		_drawGame();
 
@@ -203,43 +208,43 @@ void MainGame::_processInput() {
 		}
 	}
 
-	if (_inputManager.isKeyPressed(SDLK_ESCAPE))
+	if (_inputManager.isKeyDown(SDLK_ESCAPE))
 	{
 		_gameState = GameState::EXIT;
 	}
 
 
 
-	if (_inputManager.isKeyPressed(SDLK_UP))
+	if (_inputManager.isKeyDown(SDLK_UP))
 	{
-		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
+		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED * MexEngine::TimeStep::SM_Delta.getDeltaTime()));
 
 	}
 
-	if (_inputManager.isKeyPressed(SDLK_DOWN))
+	if (_inputManager.isKeyDown(SDLK_DOWN))
 	{
-		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
+		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED * MexEngine::TimeStep::SM_Delta.getDeltaTime()));
 	}
 
-	if (_inputManager.isKeyPressed(SDLK_LEFT))
+	if (_inputManager.isKeyDown(SDLK_LEFT))
 	{
-		_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
+		_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED * MexEngine::TimeStep::SM_Delta.getDeltaTime(), 0.0f));
 	}
 
-	if (_inputManager.isKeyPressed(SDLK_RIGHT))
+	if (_inputManager.isKeyDown(SDLK_RIGHT))
 	{
-		_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
+		_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED * MexEngine::TimeStep::SM_Delta.getDeltaTime(), 0.0f));
 	}
 
 
 
 
-	if (_inputManager.isKeyPressed(SDLK_PAGEUP))
+	if (_inputManager.isKeyDown(SDLK_PAGEUP))
 	{
-		_camera.setScale(_camera.getScale() * SCALE_SPEED);
+		_camera.setScale(_camera.getScale() * SCALE_SPEED );
 	}
 
-	if (_inputManager.isKeyPressed(SDLK_PAGEDOWN))
+	if (_inputManager.isKeyDown(SDLK_PAGEDOWN))
 	{
 		_camera.setScale(_camera.getScale() / SCALE_SPEED);
 	}

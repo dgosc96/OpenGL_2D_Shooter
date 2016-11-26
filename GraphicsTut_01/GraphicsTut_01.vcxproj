@@ -144,7 +144,6 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="CONSTANTS.h" />
     <ClInclude Include="Crosshair.h" />
-    <ClInclude Include="DEBUG.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Human.h" />
     <ClInclude Include="Level.h" />

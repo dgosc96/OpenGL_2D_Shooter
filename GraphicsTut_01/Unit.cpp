@@ -4,12 +4,13 @@
 #include "CONSTANTS.h"
 
 #include <MexEngine/ResourceManager.h>
+
 #include <algorithm>
 #include <math.h>
 #include <SDL\SDL.h>
 
 
-#include "DEBUG.h"
+#include <MexEngine\DEBUG.h>
 
 #if DEBUG
 

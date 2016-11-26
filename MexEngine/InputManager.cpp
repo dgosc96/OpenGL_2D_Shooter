@@ -14,6 +14,12 @@ namespace MexEngine
 	}
 
 
+	void InputManager::update()
+	{
+		_prevKeyMap = _keyMap;
+
+	}
+
 	void InputManager::pressKey(unsigned int keyID)
 	{
 		_keyMap[keyID] = true;
@@ -34,7 +40,7 @@ namespace MexEngine
 
 	}
 
-	bool InputManager::isKeyPressed(unsigned int keyID)
+	bool InputManager::isKeyDown(unsigned int keyID)
 	{
 		auto it = _keyMap.find(keyID);
 		if (it != _keyMap.end())
@@ -48,7 +54,27 @@ namespace MexEngine
 
 	}
 
+	bool InputManager::wasKeyDown(unsigned int keyID)
+	{
+		auto it = _prevKeyMap.find(keyID);
+		if (it != _prevKeyMap.end())
+		{
+			return it->second;
+		}
 
+		return false;
+		
 
+	}
 
+	bool InputManager::isKeyPressed(unsigned int keyID)
+	{
+		if (isKeyDown(keyID) && !wasKeyDown(keyID))
+		{
+			return true;
+		}
+
+		return false;
+
+	}
 }

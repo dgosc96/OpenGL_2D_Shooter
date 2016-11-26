@@ -4,6 +4,8 @@
 
 #include "Utilities.h"
 
+#include <MexEngine\TimeStep.h>
+
 Player::Player(glm::vec4 posAndSize, float speed)
 {
 
@@ -57,16 +59,15 @@ bool Player::processInput(MexEngine::InputManager&		inputManager,
 	const std::vector<std::string>& levelData,
 	glm::vec2&						mouseCoords)
 {
-	bool didPlayerMove = false;
 	float currTime = (float)SDL_GetTicks() / 1000;
 
+	_shouldIMove = false;
 
-
-	if (inputManager.isKeyPressed(SDL_BUTTON_LEFT))
+	if (inputManager.isKeyDown(SDL_BUTTON_LEFT))
 	{
 		static float LastShotTime;
 
-		if (currTime - LastShotTime >= getRandomNumb(0.01f, 0.15f))
+		if (currTime - LastShotTime > 0.07f)
 		{
 
 			shoot(mouseCoords, 5.0f);
@@ -98,69 +99,65 @@ bool Player::processInput(MexEngine::InputManager&		inputManager,
 
 
 		}
-		inputManager.releaseKey(SDL_BUTTON_RIGHT);
 
 	}
 
-	glm::vec2 direction(0.0f, 0.0f);
-
-	if (inputManager.isKeyPressed(SDLK_w))
+	if (inputManager.isKeyDown(SDLK_w))
 	{
-		direction += glm::vec2(0.0f, 1.0f);
-		didPlayerMove = true;
+		_direction += glm::vec2(0.0f, 1.0f);
+		_shouldIMove = true;
 	}
 
-	if (inputManager.isKeyPressed(SDLK_s))
+	if (inputManager.isKeyDown(SDLK_s))
 	{
-		direction += glm::vec2(0.0f, -1.0f);
-		didPlayerMove = true;
+		_direction += glm::vec2(0.0f, -1.0f);
+		_shouldIMove = true;
 	}
 
-	if (inputManager.isKeyPressed(SDLK_a))
+	if (inputManager.isKeyDown(SDLK_a))
 	{
-		direction += glm::vec2(-1.0f, 0.0f);
-		didPlayerMove = true;
+		_direction += glm::vec2(-1.0f, 0.0f);
+		_shouldIMove = true;
 	}
 
-	if (inputManager.isKeyPressed(SDLK_d))
+	if (inputManager.isKeyDown(SDLK_d))
 	{
-		direction += glm::vec2(1.0f, 0.0f);
-		didPlayerMove = true;
-	}
-
-	if (didPlayerMove == true)
-	{
-		move(direction);
+		_direction += glm::vec2(1.0f, 0.0f);
+		_shouldIMove = true;
 	}
 
 
 
-	return didPlayerMove;
+	
+
+
+
+	return _shouldIMove;
 }
 
 
-void Player::move(glm::vec2 direction)
+void Player::move()
 {
-	if (direction != glm::vec2(0.0f, 0.0f))
+	if (_direction != glm::vec2(0.0f, 0.0f) && _shouldIMove == true)
 	{
 
-		direction = glm::normalize(direction);
+		_direction = glm::normalize(_direction);
 
-		_position.x += (direction.x * _speed);
-		_position.y += (direction.y * _speed);
+		_position += (_direction * _speed) * MexEngine::TimeStep::SM_Delta.getDeltaTime();
 
-		direction = glm::vec2(0.0f, 0.0f);
+		_direction = glm::vec2(0.0f, 0.0f);
+
 	}
 }
 
 void Player::shoot(glm::vec2& mouseCoords, float spreadRange, float speed, float bulletSize)
 {
-	int bulletLifeTime = 350;
+	float bulletLifeTime = 10.0f;
 
 
 	glm::vec2 spread(getRandomNumb(-spreadRange, spreadRange), getRandomNumb(-spreadRange, spreadRange));
 
-	glm::vec2 direction(mouseCoords - (_position + (_size / 2.0f - 5.0f)) + spread);
+	glm::vec2 direction(((mouseCoords - (bulletSize / 4.0f)) - (_position + (_size / 2.0f - 5.0f)) ) + spread);
 	direction = glm::normalize(direction);
 
 	_bullets.emplace_back(_position + (_size / 2.0f - (bulletSize / 2.0f)), direction, speed, bulletLifeTime, glm::vec2(bulletSize));

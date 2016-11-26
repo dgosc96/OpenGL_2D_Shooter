@@ -86,9 +86,6 @@ private:
 	float				_fps;
 
 
-	float				_time;
-
-
 
 	
 };

@@ -87,7 +87,7 @@ protected:
 
 	GLint				_textureID;
 
-	MexEngine::Color	_color;
+	MexEngine::ColorRGBA8	_color;
 
 	glm::vec2			_direction;
 	float				_dirChangingTime;

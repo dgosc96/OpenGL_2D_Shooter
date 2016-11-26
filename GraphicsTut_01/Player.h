@@ -22,8 +22,8 @@ public:
 	bool processInput(	MexEngine::InputManager&		inputManager, 
 						const std::vector<std::string>&	levelData,
 						glm::vec2&						mouseCoords);
-	void move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies){}
-	void move(glm::vec2 direction);
+	void move(std::vector<Unit*>& enemies, std::vector<Unit*>& allies) { move(); }
+	void move();
 
 	void shoot(	glm::vec2&	mouseCoords,
 				float		spreadRange	= 8.0f,
@@ -39,6 +39,7 @@ public:
 
 protected:	
 
+	bool _shouldIMove;
 
 
 	std::vector<Bullet>		_bullets;
