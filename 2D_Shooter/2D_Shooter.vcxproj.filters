@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>src\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>src\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Human.cpp">
+      <Filter>src\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>src\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Unit.cpp">
+      <Filter>src\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Zombie.cpp">
+      <Filter>src\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>src\GameManagment</Filter>
+    </ClCompile>
+    <ClCompile Include="MainGame.cpp">
+      <Filter>src\GameManagment</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>src\GameManagment</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>src\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Crosshair.cpp">
+      <Filter>src\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities.cpp">
+      <Filter>src\Other</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Bullet.h">
+      <Filter>src\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>src\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Human.h">
+      <Filter>src\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>src\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Unit.h">
+      <Filter>src\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Zombie.h">
+      <Filter>src\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="MainGame.h">
+      <Filter>src\GameManagment</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>src\GameManagment</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>src\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="Crosshair.h">
+      <Filter>src\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="CONSTANTS.h">
+      <Filter>src\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities.h">
+      <Filter>src\Other</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{70bfdf7f-0bcb-423f-b2c9-da350824c398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Units">
+      <UniqueIdentifier>{bcaefd51-8332-4f77-ac14-41527db6ca32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GameManagment">
+      <UniqueIdentifier>{5baac21e-fe8e-44c3-81ca-24ed284c3365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\HUD">
+      <UniqueIdentifier>{670608ad-4f0b-420d-a929-e950d126f371}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Other">
+      <UniqueIdentifier>{c6013abd-bd2c-4872-ac16-9d24b714d1f8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

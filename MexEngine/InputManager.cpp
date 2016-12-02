@@ -4,7 +4,7 @@ namespace MexEngine
 {
 
 	InputManager::InputManager() :
-		_mouseCoords(0.0f)
+		m_mouseCoords(0.0f)
 	{
 	}
 
@@ -16,34 +16,34 @@ namespace MexEngine
 
 	void InputManager::update()
 	{
-		_prevKeyMap = _keyMap;
+		m_prevKeyMap = m_keyMap;
 
 	}
 
 	void InputManager::pressKey(unsigned int keyID)
 	{
-		_keyMap[keyID] = true;
+		m_keyMap[keyID] = true;
 
 	}
 
 	void InputManager::releaseKey(unsigned int keyID)
 	{
-		_keyMap[keyID] = false;
+		m_keyMap[keyID] = false;
 
 
 	}
 
 	void InputManager::setMouseCoords(float x, float y)
 	{
-		_mouseCoords.x = x;
-		_mouseCoords.y = y;
+		m_mouseCoords.x = x;
+		m_mouseCoords.y = y;
 
 	}
 
 	bool InputManager::isKeyDown(unsigned int keyID)
 	{
-		auto it = _keyMap.find(keyID);
-		if (it != _keyMap.end())
+		auto it = m_keyMap.find(keyID);
+		if (it != m_keyMap.end())
 		{
 			return it->second;
 		}
@@ -56,8 +56,8 @@ namespace MexEngine
 
 	bool InputManager::wasKeyDown(unsigned int keyID)
 	{
-		auto it = _prevKeyMap.find(keyID);
-		if (it != _prevKeyMap.end())
+		auto it = m_prevKeyMap.find(keyID);
+		if (it != m_prevKeyMap.end())
 		{
 			return it->second;
 		}

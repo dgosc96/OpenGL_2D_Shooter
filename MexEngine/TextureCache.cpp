@@ -17,15 +17,15 @@ namespace MexEngine
 	GLTexture TextureCache::getTexture(const std::string &texturePath)
 	{
 		
-		auto mapIterator = _textureMap.find(texturePath);
+		auto mapIterator = m_textureMap.find(texturePath);
 
 	
-		if (mapIterator == _textureMap.end())
+		if (mapIterator == m_textureMap.end())
 		{
 			GLTexture newTexture = ImageLoader::loadPNG(texturePath);
 
 		
-			_textureMap.insert(make_pair(texturePath, newTexture));
+			m_textureMap.insert(make_pair(texturePath, newTexture));
 
 #if DEBUG
 			std::cout << "Loaded texture from file!\n";

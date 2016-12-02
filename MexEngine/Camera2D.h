@@ -13,24 +13,26 @@ namespace MexEngine
 
 		void update();
 
+		bool isBoxInView(glm::vec2& boxPos, glm::vec2& boxSize);
+
 		glm::vec2 convertScreenToWorld(glm::vec2 screenCoords);
 		glm::vec2 convertWorldToScreen(glm::vec2 worldCoords);
 
-		void setPosition(const glm::vec2& newPosition) { _position = newPosition; _needsMartixUpdate = true;
+		void setPosition(const glm::vec2& newPosition) { m_position = newPosition; m_needsMartixUpdate = true;
 		}
-		void setScale(float newScale) { _scale = newScale; _needsMartixUpdate = true;
+		void setScale(float newScale) { m_scale = newScale; m_needsMartixUpdate = true;
 		}
 
-		glm::vec2	getPosition()		{ return _position; }
-		float		getScale()			{ return _scale; }
-		glm::mat4	getCameraMatrix()	{ return _cameraMatrix; }
+		glm::vec2	getPosition()		{ return m_position; }
+		float		getScale()			{ return m_scale; }
+		glm::mat4	getCameraMatrix()	{ return m_cameraMatrix; }
 
 	private:
-		int		  _screenWidth, _screenHeight;
-		bool	  _needsMartixUpdate;
-		float	  _scale;
-		glm::vec2 _position;
-		glm::mat4 _cameraMatrix;
-		glm::mat4 _orthoMatrix;
+		int		  m_screenWidth, m_screenHeight;
+		bool	  m_needsMartixUpdate;
+		float	  m_scale;
+		glm::vec2 m_position;
+		glm::mat4 m_cameraMatrix;
+		glm::mat4 m_orthoMatrix;
 	};
 }

@@ -4,7 +4,7 @@ class Human : public Unit
 {
 public:
 	Human(){}
-	Human(glm::vec4 posAndSize, float speed = 2.0f);
+	Human(glm::vec4 posAndSize, float speed = 1.0f);
 
 	virtual ~Human();
 	

@@ -63,6 +63,9 @@
     <ClCompile Include="TimeStep.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteFont.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Errors.h">
@@ -117,6 +120,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TimeStep.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteFont.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

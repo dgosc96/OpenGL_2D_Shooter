@@ -17,17 +17,17 @@ namespace MexEngine
 		bool update_begin();
 		void update_end();
 
-		float getDeltaTime() { return _deltaTime; }
+		float getDeltaTime() { return m_deltaTime; }
 
 	private:
 
-		float _prevTicks;
-		float _totalDeltaTime;
-		float _deltaTime;
+		float m_prevTicks;
+		float m_totalDeltaTime;
+		float m_deltaTime;
 
 
 
-		size_t _iterator = 0;
+		size_t m_iterator = 0;
 	};
 
 
@@ -35,7 +35,7 @@ namespace MexEngine
 	{
 	public:
 
-		static SemiFixedDelta SM_Delta;
+		static SemiFixedDelta SF_Delta;
 
 	};
 

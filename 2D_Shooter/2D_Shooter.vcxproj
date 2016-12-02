@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CC47BCC6-D3AE-4240-A608-8A71EE6D5E24}</ProjectGuid>
-    <RootNamespace>GraphicsTut_01</RootNamespace>
+    <RootNamespace>2D_Shooter</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <ProjectName>2D_Shooter</ProjectName>
   </PropertyGroup>
@@ -110,7 +110,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;MexEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;glew32.lib;opengl32.lib;MexEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -131,6 +131,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Crosshair.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Human.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="CONSTANTS.h" />
     <ClInclude Include="Crosshair.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="HUD.h" />
     <ClInclude Include="Human.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="MainGame.h" />

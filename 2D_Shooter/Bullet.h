@@ -30,12 +30,12 @@ public:
 
 
 protected:
-	bool _canIMove(glm::vec2 &newPosition, const std::vector<std::string> &leveldata);
 
 
-	float		_birthTime;
-	float		_lifeTime;
-	glm::vec2	_direction;
+
+	float		m_birthTime;
+	float		m_lifeTime;
+	glm::vec2	m_direction;
 
 
 };

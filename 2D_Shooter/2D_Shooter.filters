@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{7dfb6066-0c42-49a2-8267-772bf7db8ac3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Units">
+      <UniqueIdentifier>{a3e005ab-784c-45b0-beab-c932321d2cf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Config">
+      <UniqueIdentifier>{7b4e3bb9-58d7-4594-aa86-0f5c5fde31f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GameManagment">
+      <UniqueIdentifier>{074cb676-8edb-4a8b-b61e-3863e49792fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Other">
+      <UniqueIdentifier>{1104563b-6b5a-4f67-9080-075b2000445f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>src\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>src\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Human.cpp">
+      <Filter>src\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>src\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Unit.cpp">
+      <Filter>src\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Zombie.cpp">
+      <Filter>src\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>src\GameManagment</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>src\GameManagment</Filter>
+    </ClCompile>
+    <ClCompile Include="MainGame.cpp">
+      <Filter>src\GameManagment</Filter>
+    </ClCompile>
+    <ClCompile Include="Crosshair.cpp">
+      <Filter>src\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities.cpp">
+      <Filter>src\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>src\Other</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Enemy.h">
+      <Filter>src\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Human.h">
+      <Filter>src\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>src\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Unit.h">
+      <Filter>src\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>src\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="CONSTANTS.h">
+      <Filter>src\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Zombie.h">
+      <Filter>src\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>src\GameManagment</Filter>
+    </ClInclude>
+    <ClInclude Include="MainGame.h">
+      <Filter>src\GameManagment</Filter>
+    </ClInclude>
+    <ClInclude Include="Crosshair.h">
+      <Filter>src\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities.h">
+      <Filter>src\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>src\Other</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

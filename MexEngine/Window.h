@@ -25,16 +25,16 @@ namespace MexEngine
 
 		void swapBuffer();
 
-		void setWindowMode(unsigned int windowMode)	{ _windowMode = windowMode; }
+		void setWindowMode(unsigned int windowMode)	{ m_windowMode = windowMode; }
 
-		int getScreenWidth()						{ return _screenWidth; }
-		int getScreenHeight()						{ return _screenHeight; }
+		int getScreenWidth()						{ return m_screenWidth; }
+		int getScreenHeight()						{ return m_screenHeight; }
 
 	private:
-		SDL_Window* _sdlWindow;
-		int _screenWidth;
-		int _screenHeight;
+		SDL_Window* m_sdlWindow;
+		int m_screenWidth;
+		int m_screenHeight;
 
-		unsigned int _windowMode;
+		unsigned int m_windowMode;
 	};
 }

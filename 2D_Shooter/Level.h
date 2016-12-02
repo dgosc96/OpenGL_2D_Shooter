@@ -23,20 +23,20 @@ public:
 
 	void draw();
 
-	glm::vec2 getPlayerPos() { return _playerPos; }
+	glm::vec2 getPlayerPos() { return m_playerPos; }
 
 
-	const std::vector<std::string>& getLevelData() const { return _levelData; }
+	const std::vector<std::string>& getLevelData() const { return m_levelData; }
 
 
 private:
-	std::vector<std::string>	_levelData;
+	std::vector<std::string>	m_levelData;
 
-	MexEngine::SpriteBatch		_spriteBatch;
+	MexEngine::SpriteBatch		m_spriteBatch;
 
-	glm::vec2					_playerPos;
+	glm::vec2					m_playerPos;
 
 
-	void _setPlayerPos(glm::vec2 position) { _playerPos = position; }
+	void setPlayerPos(glm::vec2 position) { m_playerPos = position; }
 };
 

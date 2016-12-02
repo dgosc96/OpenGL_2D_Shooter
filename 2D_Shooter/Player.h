@@ -12,7 +12,7 @@
 class Player : public Human
 {
 public:
-	Player(glm::vec4 posAndSize, float speed = 10.0f);
+	Player(glm::vec4 posAndSize, float speed = 5.0f);
 	~Player();
 
 	void init(glm::vec4 posAndSize, float speed);
@@ -27,7 +27,7 @@ public:
 
 	void shoot(	glm::vec2&	mouseCoords,
 				float		spreadRange	= 8.0f,
-				float		speed		= 55.0f,
+				float		speed		= 25.0f,
 				float		bulletSize	= 22.0f);
 
 	void updateBullets(const  std::vector<std::string> &leveldata,									std::vector<Unit*>& enemies,
@@ -39,10 +39,10 @@ public:
 
 protected:	
 
-	bool _shouldIMove;
+	bool m_shouldIMove;
 
 
-	std::vector<Bullet>		_bullets;
+	std::vector<Bullet>		m_bullets;
 
 
 

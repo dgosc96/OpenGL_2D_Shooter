@@ -4,8 +4,8 @@ namespace MexEngine
 {
 	GLTexture ResourceManager::getTexture(const std::string &texturePath)
 	{
-		return _textureCache.getTexture(texturePath);
+		return m_textureCache.getTexture(texturePath);
 	}
 
-	TextureCache ResourceManager:: _textureCache;
+	TextureCache ResourceManager:: m_textureCache;
 }

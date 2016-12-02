@@ -8,25 +8,25 @@
 #include <MexEngine\TimeStep.h>
 
 Bullet::Bullet(glm::vec2 pos, glm::vec2 dir, float speed, float lifeTime, glm::vec2	size) :
-	_direction	(dir),
-	_lifeTime	(lifeTime)
+	m_direction	(dir),
+	m_lifeTime	(lifeTime)
 {
-	_position = pos;
-	_speed = speed;
-	_size = size;
-	_radius = _size.x / 2.0f;
-	_depth = 1.0f;
-	_textureID = MexEngine::ResourceManager::getTexture("Textures/jimmyJump_pack/PNG/Bullet.png").id;
+	m_position = pos;
+	m_speed = speed;
+	m_size = size;
+	m_radius = m_size.x / 2.0f;
+	m_depth = 1.0f;
+	m_textureID = MexEngine::ResourceManager::getTexture("Textures/jimmyJump_pack/PNG/Bullet.png").id;
 
-	_birthTime = SDL_GetTicks() / 1000.0f;
+	m_birthTime = SDL_GetTicks() / 1000.0f;
 
-	_damage = 70;
-	_attackSpeed = 0.0f;
-	_lastAttackTime = 0.0f;
+	m_damage = 70;
+	m_attackSpeed = 0.0f;
+	m_lastAttackTime = 0.0f;
 
-	_color.r = getRandomNumb(60, 255);
-	_color.g = getRandomNumb(60, 255);
-	_color.b = getRandomNumb(60, 255);
+	m_color.r = getRandomNumb(60, 255);
+	m_color.g = getRandomNumb(60, 255);
+	m_color.b = getRandomNumb(60, 255);
 }
 
 
@@ -40,35 +40,23 @@ Bullet::~Bullet()
 bool Bullet::update(const std::vector<std::string> &leveldata, std::vector<Unit*>& enemies, std::vector<Unit*>& humans)
 {
 
-	glm::vec2 newPos = _position + (_direction * _speed) * MexEngine::TimeStep::SM_Delta.getDeltaTime();
+	glm::vec2 newPos = m_position + (m_direction * m_speed) * MexEngine::TimeStep::SF_Delta.getDeltaTime();
 
 	float currTime = SDL_GetTicks() / 1000.0f;
 
-	if (currTime - _birthTime > _lifeTime || collideWithUnits(enemies, humans, leveldata) || _canIMove(newPos, leveldata) == false)
+	if (currTime - m_birthTime > m_lifeTime || collideWithUnits(enemies, humans, leveldata) || canIMove(newPos, leveldata) == false)
 	{
 		return true;
 	}
 
-	_position = newPos;
+	m_position = newPos;
 	return false;
 
 
 }
 
 
-bool Bullet::_canIMove(glm::vec2 &newPosition, const std::vector<std::string> &leveldata)
-{
-	int xTileNumb = (int)(newPosition.x / TILE_WIDTH);
 
-	int yTileNumb = (int)(newPosition.y / TILE_WIDTH);
-
-	if (leveldata[yTileNumb][xTileNumb] == '#')
-	{
-		return false;
-	}
-	return true;
-
-}
 
 bool Bullet::collideWithUnits(std::vector<Unit*>& enemies,
 	std::vector<Unit*>& allies, const std::vector<std::string> &levelData)
@@ -88,7 +76,7 @@ bool Bullet::collideWithUnits(std::vector<Unit*>& enemies,
 					enemies.pop_back();
 				}
 				
-				_direction *= -1;
+				m_direction *= -1;
 
 				return true;
 			}
@@ -102,9 +90,7 @@ bool Bullet::collideWithUnits(std::vector<Unit*>& enemies,
 		{
 			if (CollideWithUnit(allies[j], levelData)) {
 				
-				_direction *= -1;
-
-
+				m_direction *= -1;
 
 				return true;
 			}
@@ -119,7 +105,7 @@ bool Bullet::attack(Unit* target)
 
 	bool isTargetDead = false;
 
-		target->takeDMG(_damage);
+		target->takeDMG(m_damage);
 
 
 		if (target->getHealth() <= 0)

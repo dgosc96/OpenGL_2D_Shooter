@@ -4,85 +4,88 @@
 
 namespace MexEngine {
 
+
+	Glyph::Glyph(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint Texture, float Depth, const ColorRGBA8& color) :
+		texture(Texture),
+		depth(Depth)
+	{
+
+		topLeft.color = color;
+		topLeft.setPosition(destRect.x, destRect.y + destRect.w);
+		topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
+
+		bottomLeft.color = color;
+		bottomLeft.setPosition(destRect.x, destRect.y);
+		bottomLeft.setUV(uvRect.x, uvRect.y);
+
+		topRight.color = color;
+		topRight.setPosition(destRect.x + destRect.z, destRect.y + destRect.w);
+		topRight.setUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
+
+		bottomRight.color = color;
+		bottomRight.setPosition(destRect.x + destRect.z, destRect.y);
+		bottomRight.setUV(uvRect.x + uvRect.z, uvRect.y);
+
+
+	}
+
+
 	SpriteBatch::SpriteBatch() :
-		_vbo(0),
-		_vao(0)
+		m_vbo(0),
+		m_vao(0)
 	{
 	}
 
 
 	SpriteBatch::~SpriteBatch()
 	{
-		for (size_t i = 0; i < _glyphs.size(); i++)
-		{
-			delete _glyphs[i];
-		}
-
 	}
 
 	void SpriteBatch::init()
 	{
-		_createVertexArray();
+		createVertexArray();
 
 	}
 
-	void SpriteBatch::begin(GlyphSortType sortType /*= GlyphSortType::TEXTURE*/)
+	void SpriteBatch::begin(GlyphSortType sortType)
 	{
-		for (size_t i = 0; i < _glyphs.size(); i++)
-		{
-			delete _glyphs[i];
-		}
 
-		_sortType = sortType;
-		_renderBatches.clear();
-		_glyphs.clear();
+		m_sortType = sortType;
+		m_renderBatches.clear();
+		m_glyphs.clear();
 
 	}
 
 	void SpriteBatch::end()
 	{
-		_sortGlyphs();
-		_createRenderBatches();
+		m_glyphPtrs.resize(m_glyphs.size());
+
+		for (size_t i = 0; i < m_glyphs.size(); i++)
+		{
+			m_glyphPtrs[i] = &m_glyphs[i];
+		}
+
+		sortGlyphs();
+		createRenderBatches();
 
 
 	}
 
 	void SpriteBatch::draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const ColorRGBA8& color)
 	{
-		Glyph* newGlyph = new Glyph;
 
-		newGlyph->texture	= texture;
-		newGlyph->depth		= depth;
-
-		newGlyph->topLeft.color = color;
-		newGlyph->topLeft.setPosition	(destRect.x, destRect.y + destRect.w);
-		newGlyph->topLeft.setUV			(uvRect.x, uvRect.y + uvRect.w);
-
-		newGlyph->bottomLeft.color = color;
-		newGlyph->bottomLeft.setPosition(destRect.x, destRect.y);
-		newGlyph->bottomLeft.setUV(uvRect.x, uvRect.y);
-
-		newGlyph->topRight.color = color;
-		newGlyph->topRight.setPosition(destRect.x + destRect.z, destRect.y + destRect.w);
-		newGlyph->topRight.setUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
-
-		newGlyph->bottomRight.color = color;
-		newGlyph->bottomRight.setPosition(destRect.x + destRect.z, destRect.y);
-		newGlyph->bottomRight.setUV(uvRect.x + uvRect.z, uvRect.y );
-
-
-		_glyphs.push_back(newGlyph);
+		m_glyphs.emplace_back(destRect, uvRect, texture, depth, color);
 
 	}
 
 	void SpriteBatch::renderBatch()
 	{
-		glBindVertexArray(_vao);
+		glBindVertexArray(m_vao);
 
-		for (size_t i = 0; i < _renderBatches.size(); i++)
+		for (size_t i = 0; i < m_renderBatches.size(); i++)
 		{
-			glBindTexture(GL_TEXTURE_2D, _renderBatches[i].texture);
-			glDrawArrays(GL_TRIANGLES, _renderBatches[i].offset, _renderBatches[i].numVertices);
+			glBindTexture(GL_TEXTURE_2D, m_renderBatches[i].texture);
+			glDrawArrays(GL_TRIANGLES, m_renderBatches[i].offset, m_renderBatches[i].numVertices);
 		}
 		
 
@@ -93,12 +96,12 @@ namespace MexEngine {
 
 
 
-	void SpriteBatch::_createRenderBatches()
+	void SpriteBatch::createRenderBatches()
 	{
 		std::vector<Vertex> vertices;
-		vertices.resize(_glyphs.size() * 6);
+		vertices.resize(m_glyphPtrs.size() * 6);
 
-		if (_glyphs.empty())
+		if (m_glyphPtrs.empty())
 		{
 			return;
 		}
@@ -106,37 +109,37 @@ namespace MexEngine {
 		int offset = 0;
 		int currVert = 0;
 
-		_renderBatches.emplace_back(offset, 6, _glyphs[0]->texture);
-		vertices[currVert++] = _glyphs[0]->topLeft;
-		vertices[currVert++] = _glyphs[0]->bottomLeft;
-		vertices[currVert++] = _glyphs[0]->bottomRight;
-		vertices[currVert++] = _glyphs[0]->topLeft;
-		vertices[currVert++] = _glyphs[0]->topRight;
-		vertices[currVert++] = _glyphs[0]->bottomRight;
+		m_renderBatches.emplace_back(offset, 6, m_glyphPtrs[0]->texture);
+		vertices[currVert++] = m_glyphPtrs[0]->topLeft;
+		vertices[currVert++] = m_glyphPtrs[0]->bottomLeft;
+		vertices[currVert++] = m_glyphPtrs[0]->bottomRight;
+		vertices[currVert++] = m_glyphPtrs[0]->topLeft;
+		vertices[currVert++] = m_glyphPtrs[0]->topRight;
+		vertices[currVert++] = m_glyphPtrs[0]->bottomRight;
 		offset += 6;
 
-		for (size_t currGlyph = 1; currGlyph < _glyphs.size(); currGlyph++)
+		for (size_t currGlyph = 1; currGlyph < m_glyphPtrs.size(); currGlyph++)
 		{	
-			if ((_glyphs[currGlyph]->texture) != (_glyphs[currGlyph - 1]->texture))
+			if ((m_glyphPtrs[currGlyph]->texture) != (m_glyphPtrs[currGlyph - 1]->texture))
 			{
-				_renderBatches.emplace_back(offset, 6, _glyphs[currGlyph]->texture);
+				m_renderBatches.emplace_back(offset, 6, m_glyphPtrs[currGlyph]->texture);
 			}
 			else
 			{
-				_renderBatches.back().numVertices += 6;
+				m_renderBatches.back().numVertices += 6;
 			}
 
 		
-			vertices[currVert++] = _glyphs[currGlyph]->topLeft;
-			vertices[currVert++] = _glyphs[currGlyph]->bottomLeft;
-			vertices[currVert++] = _glyphs[currGlyph]->bottomRight;
-			vertices[currVert++] = _glyphs[currGlyph]->bottomRight;
-			vertices[currVert++] = _glyphs[currGlyph]->topRight;
-			vertices[currVert++] = _glyphs[currGlyph]->topLeft;
+			vertices[currVert++] = m_glyphPtrs[currGlyph]->topLeft;
+			vertices[currVert++] = m_glyphPtrs[currGlyph]->bottomLeft;
+			vertices[currVert++] = m_glyphPtrs[currGlyph]->bottomRight;
+			vertices[currVert++] = m_glyphPtrs[currGlyph]->bottomRight;
+			vertices[currVert++] = m_glyphPtrs[currGlyph]->topRight;
+			vertices[currVert++] = m_glyphPtrs[currGlyph]->topLeft;
 			offset += 6;
 		}
 
-		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 		//orphan the buffer
 		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW);
 
@@ -149,19 +152,19 @@ namespace MexEngine {
 
 
 
-	void SpriteBatch::_createVertexArray()
+	void SpriteBatch::createVertexArray()
 	{
-		if (_vao == 0)
+		if (m_vao == 0)
 		{
-			glGenVertexArrays(1, &_vao);
+			glGenVertexArrays(1, &m_vao);
 		}
-		glBindVertexArray(_vao);
+		glBindVertexArray(m_vao);
 
-		if (_vbo == 0)
+		if (m_vbo == 0)
 		{
-			glGenBuffers(1, &_vbo);
+			glGenBuffers(1, &m_vbo);
 		}
-		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
 
 		glEnableVertexAttribArray(0);
@@ -182,20 +185,20 @@ namespace MexEngine {
 		glBindVertexArray(0);
 	}
 
-	void SpriteBatch::_sortGlyphs()
+	void SpriteBatch::sortGlyphs()
 	{
-		switch (_sortType)
+		switch (m_sortType)
 		{
 		case GlyphSortType::FRONT_TO_BACK:
-			std::stable_sort(_glyphs.begin(), _glyphs.end(), _compareFrontToBack);
+			std::stable_sort(m_glyphPtrs.begin(), m_glyphPtrs.end(), compareFrontToBack);
 			break;
 
 		case GlyphSortType::BACK_TO_FRONT:
-			std::stable_sort(_glyphs.begin(), _glyphs.end(), _compareBackToBack);
+			std::stable_sort(m_glyphPtrs.begin(), m_glyphPtrs.end(), compareBackToBack);
 			break;
 
 		case GlyphSortType::TEXTURE:
-			std::stable_sort(_glyphs.begin(), _glyphs.end(), _compareTexture);
+			std::stable_sort(m_glyphPtrs.begin(), m_glyphPtrs.end(), compareTexture);
 			break;
 		}
 
@@ -204,17 +207,17 @@ namespace MexEngine {
 
 
 
-	bool SpriteBatch::_compareFrontToBack(Glyph* a, Glyph* b)
+	bool SpriteBatch::compareFrontToBack(Glyph* a, Glyph* b)
 	{
 		return (a->depth < b->depth);
 	}
 
-	bool SpriteBatch::_compareBackToBack(Glyph* a, Glyph* b)
+	bool SpriteBatch::compareBackToBack(Glyph* a, Glyph* b)
 	{
 		return (a->depth > b->depth);
 	}
 
-	bool SpriteBatch::_compareTexture(Glyph* a, Glyph* b)
+	bool SpriteBatch::compareTexture(Glyph* a, Glyph* b)
 	{
 		return (a->texture < b->texture);
 	}

@@ -18,6 +18,7 @@
 
 #endif
 
+#include "Utilities.h"
 
 
 Unit::Unit()
@@ -35,9 +36,9 @@ void Unit::draw(MexEngine::SpriteBatch& spriteBatch)
 
 	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
 
-	glm::vec4 posAndSize = glm::vec4(_position.x, _position.y, _size.x, _size.y);
+	glm::vec4 posAndSize = glm::vec4(m_position.x, m_position.y, m_size.x, m_size.y);
 
-	spriteBatch.draw(posAndSize, uv, _textureID, _depth, _color);
+	spriteBatch.draw(posAndSize, uv, m_textureID, m_depth, m_color);
 
 
 
@@ -49,9 +50,9 @@ bool Unit::CollideWithUnit(Unit* target, const std::vector<std::string> &levelDa
 	bool didColide = false;
 
 	float TARGET_UNIT_RADIUS = target->getSize().x / 2.0f;
-	float MIN_DISTANCE = _radius + TARGET_UNIT_RADIUS;
+	float MIN_DISTANCE = m_radius + TARGET_UNIT_RADIUS;
 
-	glm::vec2 distVec = _getDistanceVec(target);
+	glm::vec2 distVec = getDistanceVec(target);
 	float distance = glm::length(distVec);
 
 	float collisionDepth = MIN_DISTANCE - distance;
@@ -60,8 +61,19 @@ bool Unit::CollideWithUnit(Unit* target, const std::vector<std::string> &levelDa
 	{
 		glm::vec2 collisionDepthVec = glm::normalize(distVec) * collisionDepth;
 
-		this->_position += collisionDepthVec / 2.0f;
-		target->_position -= collisionDepthVec / 2.0f;
+		glm::vec2 this_newPos = this->m_position + collisionDepthVec / 2.0f;
+		glm::vec2 target_newPos = target->m_position - collisionDepthVec / 2.0f;
+
+
+		if (canIMove(target_newPos, levelData))
+		{
+			this->m_position = this_newPos;
+			target->m_position = target_newPos;
+		}
+		else
+		{
+			this->m_position += collisionDepthVec;
+		}
 
 		didColide = true;
 	}
@@ -81,7 +93,7 @@ bool Unit::collideWithUnits(std::vector<Unit*>& enemies,
 		{
 			if (CollideWithUnit(enemies[i], levelData)) {
 				didCollide = true;
-				_direction *= -1;
+				m_direction *= -1;
 			}
 
 		}
@@ -93,7 +105,7 @@ bool Unit::collideWithUnits(std::vector<Unit*>& enemies,
 		{
 			if (CollideWithUnit(allies[j], levelData)) {
 				didCollide = true;
-				_direction *= -1;
+				m_direction *= -1;
 			}
 
 		}
@@ -107,37 +119,37 @@ bool Unit::collideWithLevel(const std::vector<std::string> &levelData)
 	std::vector<CollidingTile> collidingTiles;
 	bool didColide = false;
 
-	_checkTilePos(levelData,
+	checkTilePos(levelData,
 		collidingTiles,
-		_position.x,
-		_position.y);
+		m_position.x,
+		m_position.y);
 
-	_checkTilePos(levelData,
+	checkTilePos(levelData,
 		collidingTiles,
-		_position.x + _size.x,
-		_position.y);
+		m_position.x + m_size.x,
+		m_position.y);
 
-	_checkTilePos(levelData,
+	checkTilePos(levelData,
 		collidingTiles,
-		_position.x,
-		_position.y + _size.y);
+		m_position.x,
+		m_position.y + m_size.y);
 
-	_checkTilePos(levelData,
+	checkTilePos(levelData,
 		collidingTiles,
-		_position.x + _size.x,
-		_position.y + _size.y);
+		m_position.x + m_size.x,
+		m_position.y + m_size.y);
 
 
 	if (collidingTiles.size() > 0)
 	{
-		_sortCollidingTiles(collidingTiles, 0, collidingTiles.size() - 1);
+		sortCollidingTiles(collidingTiles, 0, collidingTiles.size() - 1);
 
 		for (size_t i = 0; i < collidingTiles.size(); i++)
 		{
-			_collideWithTile(collidingTiles[i].pos);
+			collideWithTile(collidingTiles[i].pos);
 		}
 
-		_direction *= -1;
+		m_direction *= -1;
 		didColide = true;
 	}
 	return didColide;
@@ -151,9 +163,9 @@ bool Unit::attack(Unit* target)
 
 	bool isTargetDead = false;
 
-	if (currTime - _lastAttackTime >= _attackSpeed)
+	if (currTime - m_lastAttackTime >= m_attackSpeed)
 	{
-		target->takeDMG(_damage);
+		target->takeDMG(m_damage);
 
 
 		if (target->getHealth() <= 0)
@@ -162,7 +174,7 @@ bool Unit::attack(Unit* target)
 			isTargetDead = true;
 		}
 
-		_lastAttackTime = currTime;
+		m_lastAttackTime = currTime;
 	}
 
 	return isTargetDead;
@@ -172,27 +184,23 @@ bool Unit::attack(Unit* target)
 
 void Unit::takeDMG(int amount)
 {
-	float damageRatio = _health / amount;
+	float damageRatio = m_health / amount;
 
-	_health = _health - amount;
-
-#if DEBUG
-
-#endif 
+	m_health = m_health - amount;
 
 
-	_color.r -= _color.r / damageRatio / 2;
-	_color.g -= _color.g / damageRatio / 2;
-	_color.b -= _color.b / damageRatio / 2;
+	m_color.r -= m_color.r / damageRatio / 2;
+	m_color.g -= m_color.g / damageRatio / 2;
+	m_color.b -= m_color.b / damageRatio / 2;
 }
 
 
-glm::vec2 Unit::_getDistanceVec(Unit* target)
+glm::vec2 Unit::getDistanceVec(Unit* target)
 {
 	float TARGET_UNIT_RADIUS = target->getSize().x / 2.0f;
 
-	glm::vec2 centerPosA = _position + _radius;
-	glm::vec2 centerPosB = target->_position + TARGET_UNIT_RADIUS;
+	glm::vec2 centerPosA = m_position + m_radius;
+	glm::vec2 centerPosB = target->m_position + TARGET_UNIT_RADIUS;
 
 	glm::vec2 distVec = centerPosA - centerPosB;
 
@@ -202,7 +210,7 @@ glm::vec2 Unit::_getDistanceVec(Unit* target)
 }
 
 
-void Unit::_checkTilePos(const std::vector<std::string> &levelData,
+void Unit::checkTilePos(const std::vector<std::string> &levelData,
 	std::vector<CollidingTile> &collidingTiles,
 	float x, float y)
 {
@@ -211,14 +219,12 @@ void Unit::_checkTilePos(const std::vector<std::string> &levelData,
 		floor(y / TILE_WIDTH));
 
 
-
-
 	if (levelData[cornerPos.y][cornerPos.x] != '.')
 	{
 
 		glm::vec2 collidingTilePos = (cornerPos * TILE_WIDTH) + (TILE_WIDTH / 2.0f);
 
-		glm::vec2 centerPlayerPos = _position + glm::vec2(_radius);
+		glm::vec2 centerPlayerPos = m_position + glm::vec2(m_radius);
 
 		glm::vec2 distVec = centerPlayerPos - collidingTilePos;
 		float distToPlayer = glm::length(distVec);
@@ -226,15 +232,18 @@ void Unit::_checkTilePos(const std::vector<std::string> &levelData,
 
 		collidingTiles.emplace_back(collidingTilePos, distToPlayer);
 	}
+
+
+
 }
 
 
 
-void Unit::_collideWithTile(glm::vec2 tilePos)
+void Unit::collideWithTile(glm::vec2 tilePos)
 {
-	float	MIN_DISTANCE = _radius + TILE_RADIUS;
+	float	MIN_DISTANCE = m_radius + TILE_RADIUS;
 
-	glm::vec2 centerPlayerPos = _position + glm::vec2(_radius);
+	glm::vec2 centerPlayerPos = m_position + glm::vec2(m_radius);
 	glm::vec2 distVec = centerPlayerPos - tilePos;
 
 	float xDepth = MIN_DISTANCE - abs(distVec.x);
@@ -249,11 +258,11 @@ void Unit::_collideWithTile(glm::vec2 tilePos)
 		{
 			if (distVec.x < 0)
 			{
-				_position.x -= xDepth;
+				m_position.x -= xDepth;
 			}
 			else
 			{
-				_position.x += xDepth;
+				m_position.x += xDepth;
 			}
 
 		}
@@ -261,11 +270,11 @@ void Unit::_collideWithTile(glm::vec2 tilePos)
 		{
 			if (distVec.y < 0)
 			{
-				_position.y -= yDepth;
+				m_position.y -= yDepth;
 			}
 			else
 			{
-				_position.y += yDepth;
+				m_position.y += yDepth;
 			}
 
 		}
@@ -274,7 +283,7 @@ void Unit::_collideWithTile(glm::vec2 tilePos)
 
 }
 
-void Unit::_sortCollidingTiles(std::vector<CollidingTile> &collidingTiles, int Left, int Right)
+void Unit::sortCollidingTiles(std::vector<CollidingTile> &collidingTiles, int Left, int Right)
 {
 
 
@@ -297,7 +306,7 @@ void Unit::_sortCollidingTiles(std::vector<CollidingTile> &collidingTiles, int L
 
 		if (left <= right)
 		{
-			_swapCollidingTiles(collidingTiles, left, right);
+			swapCollidingTiles(collidingTiles, left, right);
 
 			left++;
 			right--;
@@ -307,18 +316,18 @@ void Unit::_sortCollidingTiles(std::vector<CollidingTile> &collidingTiles, int L
 
 	if (Left < right)
 	{
-		_sortCollidingTiles(collidingTiles, Left, right);
+		sortCollidingTiles(collidingTiles, Left, right);
 	}
 
 	if (Right > left)
 	{
-		_sortCollidingTiles(collidingTiles, left, Right);
+		sortCollidingTiles(collidingTiles, left, Right);
 	}
 
 }
 
 
-void Unit::_swapCollidingTiles(std::vector<CollidingTile> &collidingTiles, int a, int b)
+void Unit::swapCollidingTiles(std::vector<CollidingTile> &collidingTiles, int a, int b)
 {
 	CollidingTile buffer = collidingTiles[a];
 
@@ -328,5 +337,26 @@ void Unit::_swapCollidingTiles(std::vector<CollidingTile> &collidingTiles, int a
 
 }
 
+bool Unit::canIMove(glm::vec2 &newPosition, const std::vector<std::string> &leveldata)
+{
+	int xTileNumb = (int)(newPosition.x / TILE_WIDTH);
 
+	int yTileNumb = (int)(newPosition.y / TILE_WIDTH);
+
+	try
+	{
+		if (leveldata[yTileNumb][xTileNumb] == '#')
+		{
+			return false;
+		}
+		return true;
+	}
+	catch (const std::exception&)
+	{
+		return false;
+	}
+
+
+
+}
 

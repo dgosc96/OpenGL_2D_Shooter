@@ -17,31 +17,31 @@ namespace MexEngine
 
 	void FpsLimiter::setMaxFPS(float maxFPS)
 	{
-		_maxFPS = maxFPS;
+		m_maxFPS = maxFPS;
 
 	}
 
 	void FpsLimiter::begin()
 	{
-		_startTicks = SDL_GetTicks();
+		m_startTicks = SDL_GetTicks();
 
 	}
 	float FpsLimiter::end() 
 	{
-		_calculateFPS();
+		calculateFPS();
 
-		float frameTicks = SDL_GetTicks() - _startTicks;
+		float frameTicks = SDL_GetTicks() - m_startTicks;
 
-		if (1000.0f / _maxFPS > frameTicks && _maxFPS != 0.0f)
+		if (1000.0f / m_maxFPS > frameTicks && m_maxFPS != 0.0f)
 		{
-			SDL_Delay(1000 / _maxFPS - frameTicks);
+			SDL_Delay(1000 / m_maxFPS - frameTicks);
 		}
 
-		return _fps;
+		return m_fps;
 
 	}
 
-	void FpsLimiter::_calculateFPS()
+	void FpsLimiter::calculateFPS()
 	{
 		static const int NUM_SAMPLES = 100;
 		static float frametimes[NUM_SAMPLES];
@@ -52,8 +52,8 @@ namespace MexEngine
 
 		float currentTicks = SDL_GetTicks();
 
-		_frameTime = currentTicks - prevTicks;
-		frametimes[currentFrame % NUM_SAMPLES] = _frameTime;
+		m_frameTime = currentTicks - prevTicks;
+		frametimes[currentFrame % NUM_SAMPLES] = m_frameTime;
 
 		prevTicks = currentTicks;
 
@@ -79,11 +79,11 @@ namespace MexEngine
 
 		if (frameTimeAverage > 0)
 		{
-			_fps = 1000.0f / frameTimeAverage;
+			m_fps = 1000.0f / frameTimeAverage;
 		}
 		else
 		{
-			_fps = 0.0f;
+			m_fps = 0.0f;
 		}
 
 

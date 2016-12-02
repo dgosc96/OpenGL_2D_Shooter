@@ -46,28 +46,28 @@ namespace MexEngine
 	{
 		Uint32 flags = SDL_WINDOW_OPENGL;
 
-		if (currentFlags & INVISIBLE || _windowMode & INVISIBLE)
+		if (currentFlags & INVISIBLE || m_windowMode & INVISIBLE)
 		{
 			flags |= SDL_WINDOW_HIDDEN;
 		}
-		if (currentFlags & FULLSCREEN || _windowMode & FULLSCREEN)
+		if (currentFlags & FULLSCREEN || m_windowMode & FULLSCREEN)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
-		if (currentFlags & BORDERLESS || _windowMode & BORDERLESS)
+		if (currentFlags & BORDERLESS || m_windowMode & BORDERLESS)
 		{
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
 
 
-		_sdlWindow = SDL_CreateWindow(windowName.c_str(), SDL_WINDOWPOS_CENTERED,
+		m_sdlWindow = SDL_CreateWindow(windowName.c_str(), SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, flags);
 
-		if (_sdlWindow == nullptr) {
+		if (m_sdlWindow == nullptr) {
 			fatalError("SDL Window could not be created!");
 		}
 
-		SDL_GLContext glContext = SDL_GL_CreateContext(_sdlWindow);
+		SDL_GLContext glContext = SDL_GL_CreateContext(m_sdlWindow);
 		if (glContext == nullptr) {
 			fatalError("SDL_GL context could not be created!");
 		}
@@ -77,9 +77,9 @@ namespace MexEngine
 			fatalError("Could not initialize glew!");
 		}
 
-
+#if DEBUG 
 		std::printf("***   OpenGL Version: %s   ***\n", glGetString(GL_VERSION));
-
+#endif 
 
 		glClearColor(0.0f, 0.11f, 0.12f, 1.0f);
 
@@ -95,7 +95,7 @@ namespace MexEngine
 	}
 
 	void Window::swapBuffer() {
-		SDL_GL_SwapWindow(_sdlWindow);
+		SDL_GL_SwapWindow(m_sdlWindow);
 
 	}
 }

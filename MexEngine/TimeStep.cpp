@@ -6,11 +6,11 @@ namespace MexEngine
 {
 
 	SemiFixedDelta::SemiFixedDelta() :
-		MAX_PHYSICS_STEPS(6),
+		MAX_PHYSICS_STEPS(12),
 		MAX_DELTA_TIME(1.0f)
 
 	{
-		_prevTicks = SDL_GetTicks();
+		m_prevTicks = SDL_GetTicks();
 
 	}
 
@@ -21,36 +21,36 @@ namespace MexEngine
 
 		float newTicks = SDL_GetTicks();
 
-		float frameTime = newTicks - _prevTicks;
+		float frameTime = newTicks - m_prevTicks;
 
-		_prevTicks = newTicks;
+		m_prevTicks = newTicks;
 
-		_totalDeltaTime = frameTime / DESIRED_FRAMETIME;
+		m_totalDeltaTime = frameTime / DESIRED_FRAMETIME;
 	
 
 	}
 
 	bool SemiFixedDelta::update_begin()
 	{
-		_deltaTime = std::min(_totalDeltaTime, MAX_DELTA_TIME);
+		m_deltaTime = std::min(m_totalDeltaTime, MAX_DELTA_TIME);
 
 
-		if (_totalDeltaTime > 0.0f && _iterator < MAX_PHYSICS_STEPS)
+		if (m_totalDeltaTime > 0.0f && m_iterator < MAX_PHYSICS_STEPS)
 		{
 			return true;
 		}
-		_iterator = 0;
+		m_iterator = 0;
 		return false;
 
 	}
 
 	void SemiFixedDelta::update_end()
 	{
-		_totalDeltaTime -= _deltaTime;
-		_iterator++;
+		m_totalDeltaTime -= m_deltaTime;
+		m_iterator++;
 
 	}
 
-	SemiFixedDelta TimeStep::SM_Delta;
+	SemiFixedDelta TimeStep::SF_Delta;
 
 }

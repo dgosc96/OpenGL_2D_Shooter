@@ -9,29 +9,29 @@ namespace MexEngine
 
 	Sprite::Sprite()
 	{
-		_vboID = 0;
+		m_vboID = 0;
 	}
 
 
 	Sprite::~Sprite()
 	{
-		if (_vboID != 0) {
-			glDeleteBuffers(1, &_vboID);
+		if (m_vboID != 0) {
+			glDeleteBuffers(1, &m_vboID);
 		}
 
 	}
 
 
 	void Sprite::init(float x, float y, float width, float height, std::string textrePath) {
-		_x = x;
-		_y = y;
-		_width = width;
-		_height = height;
+		m_x = x;
+		m_y = y;
+		m_width = width;
+		m_height = height;
 
-		_texture = ResourceManager::getTexture(textrePath);
+		m_texture = ResourceManager::getTexture(textrePath);
 
-		if (_vboID == 0) {
-			glGenBuffers(1, &_vboID);
+		if (m_vboID == 0) {
+			glGenBuffers(1, &m_vboID);
 		}
 
 		Vertex vertexData[6];
@@ -68,7 +68,7 @@ namespace MexEngine
 
 
 
-		glBindBuffer(GL_ARRAY_BUFFER, _vboID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -77,9 +77,9 @@ namespace MexEngine
 
 	void Sprite::draw() {
 
-		glBindTexture(GL_TEXTURE_2D, _texture.id);
+		glBindTexture(GL_TEXTURE_2D, m_texture.id);
 
-		glBindBuffer(GL_ARRAY_BUFFER, _vboID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
 
 		glEnableVertexAttribArray(0);
 

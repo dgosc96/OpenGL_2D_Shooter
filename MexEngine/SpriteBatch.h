@@ -15,8 +15,12 @@ namespace MexEngine
 		TEXTURE
 	};
 
-	struct Glyph
+	class Glyph
 	{
+	public:
+		Glyph(){}
+		Glyph(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const ColorRGBA8& color);
+
 		GLuint texture;
 		float  depth;
 
@@ -55,21 +59,24 @@ namespace MexEngine
 		void renderBatch();
 
 	private:
-		void _createRenderBatches();
-		void _createVertexArray();
-		void _sortGlyphs();
+		void createRenderBatches();
+		void createVertexArray();
+		void sortGlyphs();
 
-		static bool _compareFrontToBack	(Glyph* a, Glyph* b);
-		static bool _compareBackToBack	(Glyph* a, Glyph* b);
-		static bool _compareTexture		(Glyph* a, Glyph* b);
+		static bool compareFrontToBack	(Glyph* a, Glyph* b);
+		static bool compareBackToBack	(Glyph* a, Glyph* b);
+		static bool compareTexture		(Glyph* a, Glyph* b);
 
-		GLuint _vbo;
-		GLuint _vao;
+		GLuint m_vbo;
+		GLuint m_vao;
 
-		GlyphSortType _sortType;
+		GlyphSortType m_sortType;
 
-		std::vector<Glyph*>			_glyphs;
-		std::vector<RenderBatch>	_renderBatches;
+
+		std::vector<Glyph>			m_glyphs;
+		std::vector<Glyph*>			m_glyphPtrs;
+
+		std::vector<RenderBatch>	m_renderBatches;
 
 
 	};

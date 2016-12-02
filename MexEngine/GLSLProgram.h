@@ -21,14 +21,14 @@ namespace MexEngine
 		void use();
 		void unuse();
 	private:
-		void _compileShader(const std::string& filepath, GLuint& id);
+		void compileShader(const std::string& filepath, GLuint& id);
 
 
-		int _numAttributes;
+		int m_numAttributes;
 
-		GLuint _programID;
+		GLuint m_programID;
 
-		GLuint _vertexShaderID;
-		GLuint _fragmentShaderID;
+		GLuint m_vertexShaderID;
+		GLuint m_fragmentShaderID;
 	};
 }

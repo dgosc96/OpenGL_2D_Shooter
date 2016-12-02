@@ -14,19 +14,19 @@ public:
 
 	void draw(MexEngine::SpriteBatch& spriteBatch);
 
-	glm::vec2 getCenterPosition() { return _position + (_size / 2.0f); }
+	glm::vec2 getCenterPosition() { return m_position + (m_size / 2.0f); }
 
 private:
 
-	glm::vec2			_position;
-	glm::vec2			_size;
+	glm::vec2			m_position;
+	glm::vec2			m_size;
 
-	float				_depth;
-	float				_radius;
+	float				m_depth;
+	float				m_radius;
 
 
-	GLint				_textureID;
-	MexEngine::ColorRGBA8	_color;
+	GLint				m_textureID;
+	MexEngine::ColorRGBA8	m_color;
 
 };
 

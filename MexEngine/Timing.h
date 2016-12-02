@@ -16,13 +16,13 @@ namespace MexEngine
 		float end();
 
 	private:
-		void _calculateFPS();
+		void calculateFPS();
 
-		float _fps;
-		float _maxFPS;
-		float _frameTime;
+		float m_fps;
+		float m_maxFPS;
+		float m_frameTime;
 
-		unsigned int _startTicks;
+		unsigned int m_startTicks;
 	};
 
 
